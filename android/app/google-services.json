@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "66674081684",
+    "project_id": "d-car-racing-game-9eba2",
+    "storage_bucket": "d-car-racing-game-9eba2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66674081684:android:410e803cbff717f9181981",
+        "android_client_info": {
+          "package_name": "com.example.mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "66674081684-fu2h6509ebscvvgcfs36o0kst1fi2ibj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEHb3oJ67HIBn_Z_6oRVmUPUGV_FpC0aw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "66674081684-fu2h6509ebscvvgcfs36o0kst1fi2ibj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
