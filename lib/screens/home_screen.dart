@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final AppUser? appUser = Provider.of<AppUser?>(context);
     debugPrint(appUser?.userID);
+
     if (appUser == null) {
       return const AuthScreen();
     }

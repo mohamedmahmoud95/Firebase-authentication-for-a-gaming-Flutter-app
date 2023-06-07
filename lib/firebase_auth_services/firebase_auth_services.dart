@@ -31,7 +31,19 @@ class AuthServices {
     }
   }
 
-  //anonymous sign in
+
+  //Sign up with email and password
+  Future signUp(String email, String password) async {
+    try {
+      UserCredential authResult = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      final User? firebaseUser = authResult.user;
+      return _createAppUserFromFirebaseUser(firebaseUser!);
+    } catch (e) {
+      debugPrint("$e");
+      return null;
+    }
+  }
+  //sign out
   Future signOut() async {
     try {
       await _auth.signOut();
