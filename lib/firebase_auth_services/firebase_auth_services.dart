@@ -30,4 +30,15 @@ class AuthServices {
       return null;
     }
   }
+
+  //anonymous sign in
+  Future signOut() async {
+    try {
+      await _auth.signOut();
+      return null;
+    } catch (e) {
+      debugPrint("$e");
+      return e;
+    }
+  }
 }
