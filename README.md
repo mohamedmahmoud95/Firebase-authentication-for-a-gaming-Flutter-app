@@ -1,0 +1,17 @@
+# mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june
+
+A new Flutter project.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
+# Multi-user-car-racing-game-with-group-chatting-using-Flutter-and-Firebase
