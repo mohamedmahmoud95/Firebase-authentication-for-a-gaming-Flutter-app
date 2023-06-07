@@ -12,6 +12,12 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final AuthServices _authServices = AuthServices();
+
+  final _formKey = GlobalKey<FormState>();
+
+  String email = '';
+  String password = '';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,29 +33,78 @@ class _SignInScreenState extends State<SignInScreen> {
           ],
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+          child:  Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    textInputAction: TextInputAction.next,
+                    validator: (value) =>
+                    value!.isEmpty ? "Required field is empty!" : null,
+                    onChanged: (value) {
+                      setState(() {
+                        email = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    validator: (value) => value!.length < 6
+                        ? "Password must be at least 6 characters!"
+                        : null,
+                    obscureText: true,
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          await _authServices.signInWithEmailAndPassword(email, password);
+                        }
+                      },
+                      child: const Text("Sign In")),
 
-              ElevatedButton(
+                  const SizedBox(
+                    height: 20,
+                  ),
 
-                child: const Text("Sign in anonymously"),
-                onPressed: () async{
-                  debugPrint("Sign in anonymously button pressed");
-                  dynamic signIAnonResult = await _authServices.signInAnon();
-                  if (signIAnonResult == null)
-                  {
-                    debugPrint("sign in error!");
-                  }
-                  else
-                  {
-                    debugPrint("signed in anonymously");
-                    debugPrint("${signIAnonResult.userID}");
-                  }
-                },
+
+                  ElevatedButton(
+
+                    child: const Text("Sign in anonymously"),
+                    onPressed: () async{
+                      debugPrint("Sign in anonymously button pressed");
+                      dynamic signIAnonResult = await _authServices.signInAnon();
+                      if (signIAnonResult == null)
+                      {
+                        debugPrint("sign in error!");
+                      }
+                      else
+                      {
+                        debugPrint("signed in anonymously");
+                        debugPrint("${signIAnonResult.userID}");
+                      }
+                    },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
+
         ),
 
       ),
