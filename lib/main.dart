@@ -1,12 +1,13 @@
-
-
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_auth_services/firebase_auth_services.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/screens/home_screen.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
+import 'models/user.dart';
 
 void main ()  async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,40 +25,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  final AuthServices _authServices = AuthServices();
-  @override
+final AuthServices _auth = AuthServices();
+@override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-
-        appBar: AppBar(
-          title: const Text("Car racing game"),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-        ),
-
-        body: Center(
-          child: ElevatedButton(
-
-            child: const Text("Sign in"),
-            onPressed: () async{
-              debugPrint("Sign in button pressed");
-              dynamic signIAnonResult = await _authServices.signInAnon();
-              if (signIAnonResult == null)
-                {
-                  debugPrint("sign in error!");
-                }
-              else
-                {
-                  debugPrint("signed in");
-                  debugPrint(signIAnonResult.toString());
-                }
-            },
-          ),
-        )
-      ),
-    );
+    return StreamProvider<AppUser?>.value(
+        value: AuthServices().userStream,
+        initialData: null,
+        child: const HomeScreen());
   }
 }
