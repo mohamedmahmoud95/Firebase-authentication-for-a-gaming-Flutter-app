@@ -29,6 +29,13 @@
             {
               "client_id": "66674081684-fu2h6509ebscvvgcfs36o0kst1fi2ibj.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "66674081684-2ing71klbpl22oiqdsnbet6dt1ron30i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mutliUser2dCarRacingGameWithGroupChatUsingFlutterAndFirebase7june"
+              }
             }
           ]
         }
