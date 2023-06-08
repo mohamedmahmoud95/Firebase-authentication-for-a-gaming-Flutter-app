@@ -1,5 +1,4 @@
-# mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june
-
+Firebase authentication for a gaming Flutter app
 A new Flutter project.
 
 ## Getting Started
