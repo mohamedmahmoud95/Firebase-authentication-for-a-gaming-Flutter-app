@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../constants/constants.dart';
 import '../firebase_auth_services/firebase_auth_services.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -45,6 +46,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 20,
                 ),
                 TextFormField(
+                  decoration: textInputDecoration.copyWith(
+                      hintText: "Email",
+                      prefixIcon: const Icon(Icons.email_outlined)),
                   textInputAction: TextInputAction.next,
                   validator: (value) =>
                       value!.isEmpty ? "Required field is empty!" : null,
@@ -58,6 +62,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 20,
                 ),
                 TextFormField(
+                  decoration: textInputDecoration.copyWith(
+                      hintText: "Password",
+                      prefixIcon: const Icon(Icons.key)),
                   validator: (value) => value!.length < 6
                       ? "Password must be at least 6 characters!"
                       : null,

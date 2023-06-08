@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_auth_services/firebase_auth_services.dart';
 
+import '../constants/constants.dart';
+
 class SignInScreen extends StatefulWidget {
   final VoidCallback toggleShow;
 
@@ -28,12 +30,11 @@ class _SignInScreenState extends State<SignInScreen> {
           actions: [
             IconButton(
                 onPressed: () => widget.toggleShow(),
-                icon: const Icon(Icons.app_registration)
-            )
+                icon: const Icon(Icons.app_registration))
           ],
         ),
         body: Center(
-          child:  Form(
+          child: Form(
             key: _formKey,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -44,9 +45,12 @@ class _SignInScreenState extends State<SignInScreen> {
                     height: 20,
                   ),
                   TextFormField(
+                    decoration: textInputDecoration.copyWith(
+                        hintText: "Email",
+                        prefixIcon: const Icon(Icons.email_outlined)),
                     textInputAction: TextInputAction.next,
                     validator: (value) =>
-                    value!.isEmpty ? "Required field is empty!" : null,
+                        value!.isEmpty ? "Required field is empty!" : null,
                     onChanged: (value) {
                       setState(() {
                         email = value;
@@ -57,6 +61,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     height: 20,
                   ),
                   TextFormField(
+                    decoration: textInputDecoration.copyWith(
+                        hintText: "Password",
+                        prefixIcon: const Icon(Icons.key)),
                     validator: (value) => value!.length < 6
                         ? "Password must be at least 6 characters!"
                         : null,
@@ -73,28 +80,23 @@ class _SignInScreenState extends State<SignInScreen> {
                   ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          await _authServices.signInWithEmailAndPassword(email, password);
+                          await _authServices.signInWithEmailAndPassword(
+                              email, password);
                         }
                       },
                       child: const Text("Sign In")),
-
                   const SizedBox(
                     height: 20,
                   ),
-
-
                   ElevatedButton(
-
                     child: const Text("Sign in anonymously"),
-                    onPressed: () async{
+                    onPressed: () async {
                       debugPrint("Sign in anonymously button pressed");
-                      dynamic signIAnonResult = await _authServices.signInAnon();
-                      if (signIAnonResult == null)
-                      {
+                      dynamic signIAnonResult =
+                          await _authServices.signInAnon();
+                      if (signIAnonResult == null) {
                         debugPrint("sign in error!");
-                      }
-                      else
-                      {
+                      } else {
                         debugPrint("signed in anonymously");
                         debugPrint("${signIAnonResult.userID}");
                       }
@@ -104,9 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
             ),
           ),
-
         ),
-
       ),
     );
   }
