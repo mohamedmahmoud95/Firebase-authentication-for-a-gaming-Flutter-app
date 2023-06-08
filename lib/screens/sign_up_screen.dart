@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
-import '../firebase_auth_services/firebase_auth_services.dart';
+import '../firebase_services/firebase_auth_services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../widgets/loading_widget.dart';

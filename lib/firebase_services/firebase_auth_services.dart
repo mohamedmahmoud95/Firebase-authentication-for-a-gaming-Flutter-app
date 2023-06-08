@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_services/cloud_firestore_database_services.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/models/user.dart';
 
 class AuthServices {
@@ -37,7 +38,8 @@ class AuthServices {
     try {
       UserCredential authResult = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       final User? firebaseUser = authResult.user;
-      return _createAppUserFromFirebaseUser(firebaseUser!);
+      await DatabaseServices(uid: firebaseUser!.uid).updateUserData('userName', 0, 0, 0);
+      return _createAppUserFromFirebaseUser(firebaseUser);
     } catch (e) {
       debugPrint("$e");
       return null;
