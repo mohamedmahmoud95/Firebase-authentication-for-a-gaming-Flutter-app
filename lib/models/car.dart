@@ -1,13 +1,15 @@
-import 'dart:ui';
-
-import 'package:flutter/material.dart';
-
 class Car {
+  String name;
+  int left;
+  int top;
+  int score;
+  int playerNo;
 
-  final Color color;
-  final int top;
-  final int left;
-
-  Car({ this.color = Colors.red, this.top = 0, this.left = 0 });
-
+  Car(
+      {required this.name,
+      required this.top,
+      required this.left,
+      required this.score,
+      required this.playerNo
+      });
 }

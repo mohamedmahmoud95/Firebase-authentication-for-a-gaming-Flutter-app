@@ -4,8 +4,8 @@ import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_
 import 'package:provider/provider.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_services/cloud_firestore_database_services.dart';
 
-import '../models/brew.dart';
-import '../widgets/brew_list.dart';
+import '../models/car.dart';
+import '../widgets/car_list.dart';
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
 
@@ -20,6 +20,7 @@ class _GameScreenState extends State<GameScreen> {
     showModalBottomSheet(context: context,
         builder: (context) {
       return Container(
+        height: 600,
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
         child: SettingsForm(),
       );
@@ -46,10 +47,10 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ],
         ),
-        body: StreamProvider<List<Brew>>.value(
-          value: DatabaseServices().brews,
+        body: StreamProvider<List<Car>>.value(
+          value: DatabaseServices().cars,
           initialData: [], // Replace null with an empty list
-          child: BrewList(),
+          child: CarList(),
         ),
       ),
     );

@@ -13,7 +13,7 @@ class _CarsListState extends State<CarsList> {
 
     final cars = Provider.of<List<Car>>(context);
     for (var car in cars) {
-      debugPrint(car.color.toString());
+     // debugPrint(car.color.toString());
       debugPrint(car.top.toString());
       debugPrint(car.left.toString());
 
