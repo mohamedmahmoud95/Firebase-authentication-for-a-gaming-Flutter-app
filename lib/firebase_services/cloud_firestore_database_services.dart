@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/models/brew.dart';
 
 import '../models/car.dart';
+import '../models/user.dart';
 
 class DatabaseServices{
 
@@ -24,6 +25,23 @@ class DatabaseServices{
     return brewCollection.snapshots().map((_brewListFromSnapshot)) ;
   }
 
+
+  // user data from snapshots
+  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
+    return UserData(
+        uid: uid!,
+        name: snapshot.get('name'),
+        sugars: snapshot.get('sugars'),
+        strength: snapshot.get('strength'),
+    );
+  }
+
+
+  // get user doc stream
+  Stream<UserData> get userData {
+    return brewCollection.doc(uid).snapshots()
+        .map(_userDataFromSnapshot);
+  }
 
   // List<Brew> _brewListFromSnapshot(QuerySnapshot<Object?> snapshot) {
   //   return snapshot.docs.map((doc) {
