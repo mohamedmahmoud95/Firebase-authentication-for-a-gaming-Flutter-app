@@ -16,11 +16,15 @@ class _CarListState extends State<CarList> {
 
     final cars = Provider.of<List<Car>>(context)??[];
 
-    return ListView.builder(
-      itemCount: cars.length,
-      itemBuilder: (context, index) {
-        return CarTile(car: cars[index]);
-      },
-    );
+    return
+      SizedBox(
+        height: 700,
+        child: ListView.builder(
+        itemCount: cars.length,
+        itemBuilder: (context, index) {
+          return CarTile(car: cars[index]);
+        },
+    ),
+      );
   }
 }

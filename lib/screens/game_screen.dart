@@ -6,6 +6,7 @@ import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_
 
 import '../models/car.dart';
 import '../widgets/car_list.dart';
+import '../widgets/players_score_list.dart';
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
 
@@ -50,7 +51,32 @@ class _GameScreenState extends State<GameScreen> {
         body: StreamProvider<List<Car>>.value(
           value: DatabaseServices().cars,
           initialData: [], // Replace null with an empty list
-          child: CarList(),
+          child:
+
+          Container(
+            height: 700,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Column(
+                      children: [
+                        Card(
+                          child: Container(
+                            height: 75,
+                            child: PlayersScoreList(),
+                          ),
+                        ),
+                        CarList(),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
         ),
       ),
     );
