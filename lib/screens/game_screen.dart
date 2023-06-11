@@ -32,6 +32,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text("Game screen"),
@@ -59,16 +60,29 @@ class _GameScreenState extends State<GameScreen> {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                    child: Column(
+                      constraints: BoxConstraints(
+                        minHeight: 0, // Replace with your desired minimum height
+                        maxHeight: 700, // Replace with your desired maximum height
+                        minWidth: 0, // Replace with your desired minimum width
+                        maxWidth: 500, // Replace with your desired maximum width
+                      ),
+                      child: // Your child widget here
+
+                  Column(
                       children: [
                         Card(
                           child: Container(
                             height: 75,
+                            width: 500,
                             child: PlayersScoreList(),
                           ),
                         ),
-                        CarList(),
+                     //   CarList(),
+                        SizedBox(
+                          width: 510,
+                            height: 600,
+                            child: SettingsForm()),
+
                       ],
                     ),
                   ),

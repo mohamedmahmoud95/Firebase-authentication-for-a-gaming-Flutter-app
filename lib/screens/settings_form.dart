@@ -31,6 +31,7 @@ class _SettingsFormState extends State<SettingsForm> {
     AppUser user = Provider.of<AppUser>(context);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: StreamBuilder<UserData>(
             stream: DatabaseServices(uid: user.userID).userData,
             builder: (context, snapshot) {
@@ -49,22 +50,6 @@ class _SettingsFormState extends State<SettingsForm> {
                         onChanged: (val) => setState(() => _currentName = val),
                       ),
 
-                    //   const SizedBox(height: 20.0),
-                    //   TextFormField(
-                    //     initialValue: userData?.left.toString(),
-                    //     decoration: textInputDecoration,
-                    // //    validator: (val) => val!.isEmpty ? 'Please enter left position' : null,
-                    //     onChanged: (val) => setState(() => _currentLeft = int.parse(val)),
-                    //   ),
-                    //
-                    //
-                    //   const SizedBox(height: 20.0),
-                    //   TextFormField(
-                    //     initialValue: userData?.top.toString(),
-                    //     decoration: textInputDecoration,
-                    // //    validator: (val) => val!.isEmpty ? 'Please enter top position' : null,
-                    //     onChanged: (val) => setState(() => _currentTop = int.parse(val)),
-                    //   ),
 
 
                       SizedBox(
@@ -98,7 +83,6 @@ class _SettingsFormState extends State<SettingsForm> {
                                           _currentPlayerNo ?? snapshot.data!.playerNo,
 
                                         );
-                                         Navigator.of(context).pop;
 
                                    //   };
 
