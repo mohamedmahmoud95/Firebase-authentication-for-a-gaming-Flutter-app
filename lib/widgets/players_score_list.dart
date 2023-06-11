@@ -28,7 +28,7 @@ class _PlayersScoreListState extends State<PlayersScoreList> {
         itemCount: cars.length,
         itemBuilder: (context, index) {
           return Container(
-            width: width/3.5,
+            width: width/4,
               child: PlayerScoreTile(car: cars[index])
           );
         },

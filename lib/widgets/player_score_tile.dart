@@ -19,7 +19,7 @@ class PlayerScoreTile extends StatelessWidget {
             Text(car.name),
             const SizedBox(height: 5,),
 
-            Text("${car.score }"),
+            Text("${car.left }"),
             const SizedBox(height: 5,),
           ],
         )
