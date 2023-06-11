@@ -31,6 +31,9 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -55,36 +58,34 @@ class _GameScreenState extends State<GameScreen> {
           child:
 
           Container(
-            height: 700,
+            height: height,
             child: LayoutBuilder(
               builder: (context, constraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: 0, // Replace with your desired minimum height
-                        maxHeight: 700, // Replace with your desired maximum height
-                        minWidth: 0, // Replace with your desired minimum width
-                        maxWidth: 500, // Replace with your desired maximum width
-                      ),
-                      child: // Your child widget here
-
-                  Column(
-                      children: [
-                        Card(
-                          child: Container(
-                            height: 75,
-                            width: 500,
-                            child: PlayersScoreList(),
-                          ),
-                        ),
-                     //   CarList(),
-                        SizedBox(
-                          width: 510,
-                            height: 600,
-                            child: SettingsForm()),
-
-                      ],
+                return ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: 0, // Replace with your desired minimum height
+                      maxHeight: height , // Replace with your desired maximum height
+                      minWidth: 0, // Replace with your desired minimum width
+                      maxWidth: width, // Replace with your desired maximum width
                     ),
+                    child: // Your child widget here
+
+                Column(
+                    children: [
+                      Card(
+                        child: Container(
+                          height: 75,
+                          width: width ,
+                          child: PlayersScoreList(),
+                        ),
+                      ),
+                   //   CarList(),
+                      SizedBox(
+                        width: width-50,
+                          height: height - height / 4,
+                          child: SettingsForm()),
+
+                    ],
                   ),
                 );
               },
