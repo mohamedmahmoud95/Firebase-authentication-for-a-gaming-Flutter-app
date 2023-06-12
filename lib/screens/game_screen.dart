@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_services/cloud_firestore_database_services.dart';
 
 import '../models/car.dart';
-import '../widgets/car_list.dart';
 import '../widgets/players_score_list.dart';
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -17,16 +16,16 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   final AuthServices _authServices = AuthServices();
 
-  void _showSettingsPanel() {
-    showModalBottomSheet(context: context,
-        builder: (context) {
-      return Container(
-        height: 600,
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-        child: SettingsForm(),
-      );
-    });
-  }
+  // void _showSettingsPanel() {
+  //   showModalBottomSheet(context: context,
+  //       builder: (context) {
+  //     return Container(
+  //       height: 600,
+  //       padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+  //       child: SettingsForm(),
+  //     );
+  //   });
+  // }
 
 
   @override
@@ -47,12 +46,13 @@ class _GameScreenState extends State<GameScreen> {
               },
               icon: const Icon(Icons.logout),
             ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () => _showSettingsPanel(),
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.settings),
+            //   onPressed: () => _showSettingsPanel(),
+            // ),
           ],
         ),
+
         body: StreamProvider<List<Car>>.value(
           value: DatabaseServices().cars,
           initialData: [], // Replace null with an empty list
@@ -85,14 +85,12 @@ class _GameScreenState extends State<GameScreen> {
                         width: width-50,
                           height: height - height / 4,
                           child: SettingsForm()),
-
                     ],
                   ),
                 );
               },
             ),
           ),
-
         ),
       ),
     );

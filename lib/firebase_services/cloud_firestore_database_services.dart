@@ -13,15 +13,23 @@ class DatabaseServices {
   FirebaseFirestore.instance.collection("cars");
 
   Future updateUserData(String name, int top,
-      int left, int score, int playerNo) async {
+      int left, int score, int playerNo, bool connected) async {
     return await carCollection.doc(uid).set({
       'name': name,
       'top': top,
       'left': left,
       'score': score,
       'playerNo': playerNo,
+      'connected': connected,
     });
   }
+
+  Future updateConnectedStatus(bool connected) async {
+    return await carCollection.doc(uid).update({
+      'connected': connected,
+    });
+  }
+
 
   //Get users' data stream
   Stream<List<Car>> get cars {
@@ -37,8 +45,10 @@ class DatabaseServices {
       left: snapshot.get('left'),
       score: snapshot.get('score'),
       playerNo: snapshot.get('playerNo'),
+      connected: snapshot.get('connected'),
     );
   }
+
 
   // get user doc stream
   Stream<UserData> get userData {
@@ -59,6 +69,7 @@ class DatabaseServices {
         top: doc.get('top') ?? 100,
         left: doc.get('left') ?? 100,
         score: doc.get('score') ?? 0,
+        connected: doc.get('connected')?? true,
         playerNo: index,
       );
     }).toList();
