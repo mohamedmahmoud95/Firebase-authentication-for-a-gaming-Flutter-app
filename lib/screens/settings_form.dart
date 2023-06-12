@@ -12,6 +12,7 @@ import '../firebase_services/firebase_auth_services.dart';
 import '../models/car.dart';
 import '../models/gift.dart';
 import '../models/user.dart';
+import '../widgets/player_score_tile.dart';
 
 class SettingsForm extends StatefulWidget {
   @override
@@ -21,10 +22,11 @@ class SettingsForm extends StatefulWidget {
 class _SettingsFormState extends State<SettingsForm> {
   final _formKey = GlobalKey<FormState>();
 
+  int totalWidth = 400;
   // form values
-  String? _currentName;
+  String _currentName = '';
   int _currentTop = 300;
-  int _currentLeft = 200;
+  int _currentLeft = 40;
   int _currentScore  = 0;
   int _currentPlayerNo = 0;
   bool _currentConnected = true;
@@ -37,7 +39,7 @@ class _SettingsFormState extends State<SettingsForm> {
 
   Widget updateCarsList(List<Car> cars) {
     cars.removeWhere((car) => !car.connected);
-    return SizedBox(height: 0, width: 0);
+    return const SizedBox(height: 0, width: 0);
   }
 
 
@@ -47,6 +49,7 @@ class _SettingsFormState extends State<SettingsForm> {
     final cars = Provider.of<List<Car>>(context) ?? [];
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    totalWidth = width.toInt();
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -64,6 +67,10 @@ class _SettingsFormState extends State<SettingsForm> {
                   if (_currentScore == 0)
                   {
                     _currentScore = snapshot.data!.score;
+                  }
+                  if (_currentName == '')
+                  {
+                    _currentName = snapshot.data!.name;
                   }
 
                   if (score_changed == true) {
@@ -89,6 +96,31 @@ class _SettingsFormState extends State<SettingsForm> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
+
+                          updateCarsList(cars),
+
+                        SizedBox(
+
+                        height: 90,
+                        width: width - 50,
+                        child: Container(
+                          child: ListView(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            children: List.generate(cars.length, (index) {
+                              if (index >= cars.length) {
+                                // Handle the case where the index is out of range
+                                return Container();
+                              }
+                              return Container(
+                                width: width / cars.length,
+                                child: PlayerScoreTile(car: cars[index]),
+                              );
+                            }),
+                          ),
+                        ),
+                        ),
+
                           TextFormField(
                             initialValue: userData.name,
                             decoration: textInputDecoration,
@@ -97,7 +129,7 @@ class _SettingsFormState extends State<SettingsForm> {
                                 setState(() => _currentName = val),
                           ),
                           SizedBox(
-                            height: height - height / 2,
+                            height: height / 2,
                             width: width - 50,
                             child: Stack(
                               children: [
@@ -353,7 +385,6 @@ class _SettingsFormState extends State<SettingsForm> {
   void initState() {
     super.initState();
     startGame(tempUserData);
-
   }
 
   void startGame(UserData userData) {
@@ -369,9 +400,9 @@ class _SettingsFormState extends State<SettingsForm> {
             debugPrint("player hit");
             if (gifts[i].isThreat) {
               _currentScore =
-                  (_currentScore! - 10); // Decrease score for threats
+                  (_currentScore - 10); // Decrease score for threats
             } else {
-              _currentScore = (_currentScore! + 10); // Increase score for gifts
+              _currentScore = (_currentScore + 10); // Increase score for gifts
             }
             debugPrint("player score$_currentScore");
 
@@ -391,8 +422,8 @@ class _SettingsFormState extends State<SettingsForm> {
 
         // Add new gifts randomly
         if (Random().nextInt(100) < 10) {
-          int left = Random().nextInt(400);
-          int size = 40 + Random().nextInt(41);
+          int size = 40 + Random().nextInt(20);
+          int left = ((size*2) + Random().nextInt((totalWidth - (size*2)))).toInt();
           bool isThreat = Random().nextBool();
           gifts.add(
               Gift(left: left - 100, top: 0, size: size, isThreat: isThreat));

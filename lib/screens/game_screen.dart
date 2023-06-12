@@ -72,19 +72,22 @@ class _GameScreenState extends State<GameScreen> {
                     child: // Your child widget here
 
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Card(
-                        child: Container(
-                          height: 75,
-                          width: width ,
-                          child: PlayersScoreList(),
-                        ),
-                      ),
+                      // Card(
+                      //   child: Container(
+                      //     height: 75,
+                      //     width: width ,
+                      //     child: PlayersScoreList(),
+                      //   ),
+                      // ),
                    //   CarList(),
-                      SizedBox(
-                        width: width-50,
-                          height: height - height / 4,
-                          child: SettingsForm()),
+                      Center(
+                        child: SizedBox(
+                          width: width-50,
+                            height: height - height / 4,
+                            child: SettingsForm()),
+                      ),
                     ],
                   ),
                 );
