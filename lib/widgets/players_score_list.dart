@@ -37,17 +37,3 @@ class _PlayersScoreListState extends State<PlayersScoreList> {
   }
 }
 
-
-
-
-/*
- child: Wrap(
-          children: [
-            ...cars.map((car) => Container(
-                    width: width/3.5,
-                      child: PlayerScoreTile(car: car)
-                  ),
-            ),
-
-          ]
- */

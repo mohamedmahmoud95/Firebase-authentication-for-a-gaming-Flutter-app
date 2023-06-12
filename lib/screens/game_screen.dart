@@ -38,6 +38,7 @@ class _GameScreenState extends State<GameScreen> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.blue[900],
           title: const Text("Game screen"),
           actions: [
             IconButton(

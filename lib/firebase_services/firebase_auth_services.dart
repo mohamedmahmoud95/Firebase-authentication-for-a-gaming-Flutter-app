@@ -42,7 +42,7 @@ class AuthServices {
       debugPrint("New user added to firebase!");
 
       //Create a Firestore cloud database collection doc with initial data
-      DatabaseServices(uid: firebaseUser?.uid).updateUserData( 'userName', 500, 100, 0, 1);
+      DatabaseServices(uid: firebaseUser?.uid).updateUserData( 'userName', 100, 100, 0, 0);
       debugPrint("Database collection doc created!");
       return _createAppUserFromFirebaseUser(firebaseUser);
     } catch (e) {

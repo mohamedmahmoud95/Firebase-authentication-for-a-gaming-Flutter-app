@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "66674081684",
-    "project_id": "d-car-racing-game-9eba2",
-    "storage_bucket": "d-car-racing-game-9eba2.appspot.com"
+    "project_number": "515224953020",
+    "project_id": "d-car-racing-game-bf3e3",
+    "storage_bucket": "d-car-racing-game-bf3e3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:66674081684:android:410e803cbff717f9181981",
+        "mobilesdk_app_id": "1:515224953020:android:6320b30cbf9e5333e9b0b9",
         "android_client_info": {
           "package_name": "com.example.mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june"
         }
       },
       "oauth_client": [
         {
-          "client_id": "66674081684-fu2h6509ebscvvgcfs36o0kst1fi2ibj.apps.googleusercontent.com",
+          "client_id": "515224953020-paov2ctm32unlokasv3m30lv7qba799q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCEHb3oJ67HIBn_Z_6oRVmUPUGV_FpC0aw"
+          "current_key": "AIzaSyCxrsJCRc6vTYNFRdXOuB4aushPqRRwkK8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "66674081684-fu2h6509ebscvvgcfs36o0kst1fi2ibj.apps.googleusercontent.com",
+              "client_id": "515224953020-paov2ctm32unlokasv3m30lv7qba799q.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "66674081684-2ing71klbpl22oiqdsnbet6dt1ron30i.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.mutliUser2dCarRacingGameWithGroupChatUsingFlutterAndFirebase7june"
-              }
             }
           ]
         }
