@@ -25,7 +25,7 @@ class _SettingsFormState extends State<SettingsForm> {
   String? _currentName;
   int _currentTop = 300;
   int _currentLeft = 200;
-  int _currentScore = 0;
+  int _currentScore  = 0;
   int _currentPlayerNo = 0;
   bool _currentConnected = true;
 
@@ -34,18 +34,12 @@ class _SettingsFormState extends State<SettingsForm> {
   bool gameStarted = false;
   final AuthServices _authServices = AuthServices();
 
-   Widget updateCarsList (List<Car> cars)
-   {
-     for (Car car in cars)
-     {
-       if (car.connected == false)
-       {
-         cars.remove(car);
-       }
-     }
 
-     return const SizedBox(height: 0, width: 0,);
-   }
+  Widget updateCarsList(List<Car> cars) {
+    cars.removeWhere((car) => !car.connected);
+    return SizedBox(height: 0, width: 0);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,28 +52,6 @@ class _SettingsFormState extends State<SettingsForm> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
 
-          floatingActionButton:  TextButton(
-              onPressed: () {
-                setState(() {
-                  _currentConnected = false;
-                  score_changed = true;
-                });
-                _authServices.signOut();
-              },
-         child:  Row(
-           mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text("Leave game"
-              ,style: TextStyle(
-                  color: Colors.red[900],
-                  fontSize: 15,
-                ),),
-              const SizedBox(width: 5,),
-
-              Icon(Icons.logout,color: Colors.red[900],size: 15,)
-            ],
-          ),)
-          ,
 
      body: StreamBuilder<UserData>(
               stream: DatabaseServices(uid: user.userID).userData,
@@ -89,6 +61,11 @@ class _SettingsFormState extends State<SettingsForm> {
 
 
                   tempUserData = userData!;
+                  if (_currentScore == 0)
+                  {
+                    _currentScore = snapshot.data!.score;
+                  }
+
                   if (score_changed == true) {
                     DatabaseServices(uid: user.userID).updateUserData(
                       _currentName ?? snapshot.data!.name,
@@ -141,9 +118,8 @@ class _SettingsFormState extends State<SettingsForm> {
                                 ),
 
 
-
-
                                 updateCarsList(cars),
+
 
                                 ...cars.map((car) =>
                                    car.connected == false? const UselessWidget():
@@ -174,6 +150,11 @@ class _SettingsFormState extends State<SettingsForm> {
                                                 (height - height / 2.5).toInt();
                                           }
                                         });
+
+                                        if (_currentScore == 0)
+                                          {
+                                            _currentScore = snapshot.data!.score;
+                                          }
 
                                         DatabaseServices(uid: user.userID)
                                             .updateUserData(
@@ -301,8 +282,15 @@ class _SettingsFormState extends State<SettingsForm> {
                                     _currentPlayerNo ??
                                         snapshot.data!.playerNo,
                                     _currentConnected??snapshot.data!.connected,
-
                                   );
+
+
+                                    for (Car car in cars)
+                                      {
+                                        debugPrint("${car.name}   ");
+                                      }
+
+
                                   _authServices.signOut();
                                 },
                                 child:  Row(
@@ -334,8 +322,8 @@ class _SettingsFormState extends State<SettingsForm> {
   }
 
   bool checkCollision(Gift gift, UserData userData) {
-    int carLeft = _currentLeft!;
-    int carTop = _currentTop!;
+    int carLeft = _currentLeft;
+    int carTop = _currentTop;
     int carSize = 100;
 
     if (gift.left + gift.size >= carLeft && gift.left <= carLeft + carSize) {
@@ -381,9 +369,9 @@ class _SettingsFormState extends State<SettingsForm> {
             debugPrint("player hit");
             if (gifts[i].isThreat) {
               _currentScore =
-                  (_currentScore - 10); // Decrease score for threats
+                  (_currentScore! - 10); // Decrease score for threats
             } else {
-              _currentScore = (_currentScore + 10); // Increase score for gifts
+              _currentScore = (_currentScore! + 10); // Increase score for gifts
             }
             debugPrint("player score$_currentScore");
 
