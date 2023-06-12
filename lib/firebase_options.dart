@@ -29,12 +29,12 @@ class DefaultFirebaseOptions {
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
         throw UnsupportedError(
@@ -44,47 +44,40 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCo9gq3K81ZTTSKDzvq_oj0P8IPNw2fdnw',
-    appId: '1:515224953020:android:6320b30cbf9e5333e9b0b9',
-   // appId: '1:66674081684:web:43ed608b5c75f1bd181981',
-
+    apiKey: 'AIzaSyAtHoEVehLUg7fWhNbQtRRPT4C-9ugCH9c',
+    appId: '1:66674081684:web:43ed608b5c75f1bd181981',
     messagingSenderId: '66674081684',
-    projectId: 'd-car-racing-game-bf3e3',
+    projectId: 'd-car-racing-game-9eba2',
     authDomain: 'd-car-racing-game-9eba2.firebaseapp.com',
-    storageBucket: 'd-car-racing-game-bf3e3.appspot.com',
+    storageBucket: 'd-car-racing-game-9eba2.appspot.com',
     measurementId: 'G-395NYDXNZQ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCEHb3oJ67HIBn_Z_6oRVmUPUGV_FpC0aw',
-    appId: '1:515224953020:android:6320b30cbf9e5333e9b0b9',
-  //  appId: '1:66674081684:android:410e803cbff717f9181981',
+    appId: '1:66674081684:android:410e803cbff717f9181981',
     messagingSenderId: '66674081684',
-   // projectId: 'd-car-racing-game-9eba2',
-    projectId: 'd-car-racing-game-bf3e3',
-
-    storageBucket: 'd-car-racing-game-bf3e3.appspot.com',
+    projectId: 'd-car-racing-game-9eba2',
+    storageBucket: 'd-car-racing-game-9eba2.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyC-afGyLAdz5o8ueeRN4NC3ClLSjKhLF6A',
-    //appId: '1:66674081684:ios:a2d1ab43640f9430181981',
-    appId: ' 1:515224953020:android:6320b30cbf9e5333e9b0b9',
+    appId: '1:66674081684:ios:a2d1ab43640f9430181981',
     messagingSenderId: '66674081684',
-    projectId: 'd-car-racing-game-bf3e3',
-    storageBucket: 'd-car-racing-game-bf3e3.appspot.com',
-    iosClientId: '515224953020-paov2ctm32unlokasv3m30lv7qba799q.apps.googleusercontent.com',
+    projectId: 'd-car-racing-game-9eba2',
+    storageBucket: 'd-car-racing-game-9eba2.appspot.com',
+    iosClientId: '66674081684-2ing71klbpl22oiqdsnbet6dt1ron30i.apps.googleusercontent.com',
     iosBundleId: 'com.example.mutliUser2dCarRacingGameWithGroupChatUsingFlutterAndFirebase7june',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyC-afGyLAdz5o8ueeRN4NC3ClLSjKhLF6A',
-    appId: '1:66674081684:android:410e803cbff717f9181981',
-    //appId: '1:66674081684:ios:a2d1ab43640f9430181981',
+    appId: '1:66674081684:ios:7e7ea2db9b6f72c3181981',
     messagingSenderId: '66674081684',
-    projectId: 'd-car-racing-game-bf3e3',
-    storageBucket: 'd-car-racing-game-bf3e3.appspot.com',
-    iosClientId: '515224953020-paov2ctm32unlokasv3m30lv7qba799q.apps.googleusercontent.com',
+    projectId: 'd-car-racing-game-9eba2',
+    storageBucket: 'd-car-racing-game-9eba2.appspot.com',
+    iosClientId: '66674081684-3tnk51r1qjqt324hr34h685cf3a9lv2j.apps.googleusercontent.com',
     iosBundleId: 'com.example.mutliUser2dCarRacingGameWithGroupChatUsingFlutterAndFirebase7june.RunnerTests',
   );
 }
