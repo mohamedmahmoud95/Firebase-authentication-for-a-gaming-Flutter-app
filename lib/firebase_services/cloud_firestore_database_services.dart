@@ -66,8 +66,8 @@ class DatabaseServices {
 
       return Car(
         name: doc.get('name') ?? '',
-        top: doc.get('top') ?? 100,
-        left: doc.get('left') ?? 100,
+        top: doc.get('top') ?? 300,
+        left: doc.get('left') ?? 200,
         score: doc.get('score') ?? 0,
         connected: doc.get('connected')?? true,
         playerNo: index,
