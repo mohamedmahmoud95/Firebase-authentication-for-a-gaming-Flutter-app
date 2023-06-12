@@ -21,13 +21,16 @@ class _SettingsFormState extends State<SettingsForm> {
   final _formKey = GlobalKey<FormState>();
 
   // form values
-  String? _currentName;
-  int? _currentTop;
-  int? _currentLeft;
+  String _currentName = "userName";
+  int _currentTop = 300;
+  int _currentLeft = 200;
   int _currentScore = 0;
-  int? _currentPlayerNo;
+  int _currentPlayerNo = 0;
 
   bool score_changed = false;
+
+  bool gameStarted = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +82,8 @@ class _SettingsFormState extends State<SettingsForm> {
                           width: width - 50,
                           child: Stack(
                             children: [
+
+
                               ...gifts.map(
                                 (gift) => Positioned(
                                   left: gift.left.toDouble(),
@@ -98,6 +103,7 @@ class _SettingsFormState extends State<SettingsForm> {
                                   child: GestureDetector(
                                     onPanUpdate: (newPosition) {
                                       setState(() {
+                                        gameStarted = true;
 
                                         _currentLeft = max(
                                                 0,
@@ -139,6 +145,17 @@ class _SettingsFormState extends State<SettingsForm> {
                             ],
                           ),
                         ),
+
+                        //
+                        // Center(
+                        //   child: Text(gameStarted? '': 'Drag to start', style: const TextStyle(
+                        //     color: Colors.blue,
+                        //     fontSize: 30,
+                        //     decoration: TextDecoration.none,
+                        //
+                        //   ),),
+                        // ),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -149,16 +166,16 @@ class _SettingsFormState extends State<SettingsForm> {
                                     _currentLeft =
                                         max(0, (_currentLeft ?? 0) - 40);
 
-                                    DatabaseServices(uid: user.userID)
-                                        .updateUserData(
-                                      _currentName ?? snapshot.data!.name,
-                                      _currentTop ?? snapshot.data!.top,
-                                      _currentLeft ?? snapshot.data!.left,
-                                      _currentScore ?? snapshot.data!.score,
-                                      _currentPlayerNo ??
-                                          snapshot.data!.playerNo,
-                                    );
                                   });
+                                  DatabaseServices(uid: user.userID)
+                                      .updateUserData(
+                                    _currentName ?? snapshot.data!.name,
+                                    _currentTop ?? snapshot.data!.top,
+                                    _currentLeft ?? snapshot.data!.left,
+                                    _currentScore ?? snapshot.data!.score,
+                                    _currentPlayerNo ??
+                                        snapshot.data!.playerNo,
+                                  );
                                 },
                                 child: Icon(Icons.arrow_back)),
                             ElevatedButton(
@@ -169,18 +186,20 @@ class _SettingsFormState extends State<SettingsForm> {
                                     if (_currentLeft! > (width - 100)) {
                                       _currentLeft = (width - 100).toInt();
                                     }
-                                    DatabaseServices(uid: user.userID)
-                                        .updateUserData(
-                                      _currentName ?? snapshot.data!.name,
-                                      _currentTop ?? snapshot.data!.top,
-                                      _currentLeft ?? snapshot.data!.left,
-                                      _currentScore ?? snapshot.data!.score,
-                                      _currentPlayerNo ??
-                                          snapshot.data!.playerNo,
-                                    );
+
                                   });
+
+                                  DatabaseServices(uid: user.userID)
+                                      .updateUserData(
+                                    _currentName ?? snapshot.data!.name,
+                                    _currentTop ?? snapshot.data!.top,
+                                    _currentLeft ?? snapshot.data!.left,
+                                    _currentScore ?? snapshot.data!.score,
+                                    _currentPlayerNo ??
+                                        snapshot.data!.playerNo,
+                                  );
                                 },
-                                child: Icon(Icons.arrow_forward)),
+                                child: const Icon(Icons.arrow_forward)),
                           ],
                         ),
                         ElevatedButton(
@@ -236,12 +255,13 @@ class _SettingsFormState extends State<SettingsForm> {
       left: 100,
       top: 100,
       score: 10,
-      playerNo: 1);
+      playerNo: 0);
 
   @override
   void initState() {
     super.initState();
     startGame(tempUserData);
+
   }
 
   void startGame(UserData userData) {
