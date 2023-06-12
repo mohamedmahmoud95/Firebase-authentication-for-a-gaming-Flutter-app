@@ -79,6 +79,19 @@ class _SettingsFormState extends State<SettingsForm> {
                   score_changed = false;
                 }
 
+                // if (thereIsWinner == true) {
+                //   DatabaseServices(uid: user.userID).updateUserData(
+                //     _currentName ?? snapshot.data!.name,
+                //     _currentTop ?? snapshot.data!.top,
+                //     _currentLeft ?? snapshot.data!.left,
+                //     _currentScore ?? snapshot.data!.score,
+                //     _currentPlayerNo ?? snapshot.data!.playerNo,
+                //     _currentConnected ?? snapshot.data!.connected,
+                //   );
+                //   thereIsWinner = false;
+                // }
+
+
                 return StreamProvider<List<Car>>.value(
                   value: DatabaseServices().cars,
                   initialData: [],
@@ -470,6 +483,7 @@ class _SettingsFormState extends State<SettingsForm> {
           _currentScore = 0;
           score_changed = true;
           thereIsWinner = true;
+          _currentConnected = false;
 
       }
     }
@@ -514,21 +528,23 @@ class _SettingsFormState extends State<SettingsForm> {
 
   Widget WinnerDialog() =>
       Container(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text('Yaaay'),
-        Text('We have a winner!\n congrats'),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            _authServices.signOut();
-          },
-          child: Text("Leave game"),
+    child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('Yaaay'),
+          Text('We have a winner!\n congrats'),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _authServices.signOut();
+            },
+            child: Text("Leave game"),
 
-    ),
-    ],
+      ),
+      ],
+      ),
     ),
   );
 
