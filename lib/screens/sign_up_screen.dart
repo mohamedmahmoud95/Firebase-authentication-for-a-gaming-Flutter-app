@@ -33,6 +33,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.blue[900],
+
             title: const Text("Sign Up"),
             actions: [
               IconButton(

@@ -31,10 +31,20 @@ final AuthServices _auth = AuthServices();
 @override
 
   Widget build(BuildContext context) {
-    return StreamProvider<AppUser?>.value(
+    return  MultiProvider(
+        providers: [
+        Provider<DatabaseServices>(
+        create: (_) => DatabaseServices(),
+  ),
+  ],
+  child: StreamProvider<AppUser?>.value(
         value: AuthServices().userStream,
         initialData: null,
         child: const MaterialApp(
-            home: HomeScreen()));
+          debugShowCheckedModeBanner: false,
+            home: HomeScreen())
+  ),
+  )
+  ;
   }
 }

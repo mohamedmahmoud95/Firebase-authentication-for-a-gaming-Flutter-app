@@ -34,6 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.blue[900],
             title: const Text("Sign In"),
             actions: [
               IconButton(
@@ -108,6 +109,75 @@ class _SignInScreenState extends State<SignInScreen> {
                         const SizedBox(
                       height: 20,
                     ),
+
+
+                    ElevatedButton(
+                        onPressed: () async {
+                            setState(() {
+                              loading = true;
+                            });
+                            dynamic signInResult = await _authServices
+                                .signInWithEmailAndPassword(
+                                "mohamed@gmail.com", "12345678");
+                            if (signInResult == null) {
+                              debugPrint("sign in error!");
+                              setState(() {
+                                loading = false;
+                              });
+                            };
+                        },
+
+                        child: const Text("Sign In as Mohamed")),
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    ElevatedButton(
+                        onPressed: () async {
+                            setState(() {
+                              loading = true;
+                            });
+                            dynamic signInResult = await _authServices
+                                .signInWithEmailAndPassword(
+                                "anas@gmail.com", "12345678");
+                            if (signInResult == null) {
+                              debugPrint("sign in error!");
+                              setState(() {
+                                loading = false;
+                              });
+                            };
+                          },
+
+
+                        child: const Text("Sign In as Anas")),
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+
+                    ElevatedButton(
+                        onPressed: () async {
+                            setState(() {
+                              loading = true;
+                            });
+                            dynamic signInResult = await _authServices
+                                .signInWithEmailAndPassword(
+                                "ahmed@gmail.com", "12345678");
+                            if (signInResult == null) {
+                              debugPrint("sign in error!");
+                              setState(() {
+                                loading = false;
+                              });
+                            };
+
+                        },
+
+                        child: const Text("Sign In as Ahmed")),
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+
                     ElevatedButton(
                       child: const Text("Sign in anonymously"),
                       onPressed: () async {

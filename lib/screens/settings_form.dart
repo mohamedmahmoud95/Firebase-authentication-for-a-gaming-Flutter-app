@@ -11,8 +11,12 @@ import '../constants/constants.dart';
 import '../firebase_services/firebase_auth_services.dart';
 import '../models/car.dart';
 import '../models/gift.dart';
+import '../models/message.dart';
+import '../models/road.dart';
 import '../models/user.dart';
+import '../widgets/message_bubble.dart';
 import '../widgets/player_score_tile.dart';
+import 'chat_bottom_sheet.dart';
 
 class SettingsForm extends StatefulWidget {
   @override
@@ -20,7 +24,11 @@ class SettingsForm extends StatefulWidget {
 }
 
 class _SettingsFormState extends State<SettingsForm> {
+  TextEditingController _textEditingController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
+
+  bool _showChatBottomSheet = false;
 
   int totalWidth = 400;
   // form values
@@ -30,7 +38,7 @@ class _SettingsFormState extends State<SettingsForm> {
   int _currentScore = 0;
   int _currentPlayerNo = 0;
   bool _currentConnected = true;
-
+  String _winnerName = '';
   bool score_changed = false;
 
   bool thereIsWinner = false;
@@ -43,171 +51,264 @@ class _SettingsFormState extends State<SettingsForm> {
     return const SizedBox(height: 0, width: 0);
   }
 
+
   @override
   Widget build(BuildContext context) {
     AppUser user = Provider.of<AppUser>(context);
     final cars = Provider.of<List<Car>>(context) ?? [];
+    final chats = Provider.of<List<Message>>(context) ?? [];
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     totalWidth = width.toInt();
 
-    return Material(
-      child: Scaffold(
-        body: StreamBuilder<UserData>(
-            stream: DatabaseServices(uid: user.userID).userData,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                UserData? userData = snapshot.data;
+    return Scaffold(
+      body: Stack(
+        children: [
 
-                tempUserData = userData!;
+          StreamBuilder<UserData>(
+              stream: DatabaseServices(uid: user.userID).userData,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  UserData? userData = snapshot.data;
 
-                if (_currentName == '' && _currentScore == 0) {
-                  _currentName = snapshot.data!.name;
-                  _currentScore = snapshot.data!.score;
-                }
+                  tempUserData = userData!;
+
+                  if (_currentName == '' && _currentScore == 0) {
+                    _currentName = snapshot.data!.name;
+                    _currentScore = snapshot.data!.score;
+                  }
+
+                  if (thereIsWinner == true) {
+                    DatabaseServices().resetScores();
+                  }
+
+                  if (score_changed == true) {
+                    DatabaseServices(uid: user.userID).updateUserData(
+                      _currentName ?? snapshot.data!.name,
+                      _currentTop ?? snapshot.data!.top,
+                      _currentLeft ?? snapshot.data!.left,
+                      _currentScore ?? snapshot.data!.score,
+                      _currentPlayerNo ?? snapshot.data!.playerNo,
+                      _currentConnected ?? snapshot.data!.connected,
+                    );
+                    score_changed = false;
+                  }
+
+                  return StreamProvider<List<Car>>.value(
+                    value: DatabaseServices().cars,
+                    initialData: [],
+
+                    // Replace null with an empty list
+                    child: thereIsWinner
+                        ? WinnerDialog()
+                        : Form(
+                            key: _formKey,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
 
 
-                if(thereIsWinner == true)
-                {
-                  DatabaseServices().resetScores();
-                }
 
+                                  updateCarsList(cars),
 
-                if (score_changed == true) {
-                  DatabaseServices(uid: user.userID).updateUserData(
-                    _currentName ?? snapshot.data!.name,
-                    _currentTop ?? snapshot.data!.top,
-                    _currentLeft ?? snapshot.data!.left,
-                    _currentScore ?? snapshot.data!.score,
-                    _currentPlayerNo ?? snapshot.data!.playerNo,
-                    _currentConnected ?? snapshot.data!.connected,
-                  );
-                  score_changed = false;
-                }
-
-
-
-                // if (thereIsWinner == true) {
-                //   DatabaseServices(uid: user.userID).updateUserData(
-                //     _currentName ?? snapshot.data!.name,
-                //     _currentTop ?? snapshot.data!.top,
-                //     _currentLeft ?? snapshot.data!.left,
-                //     _currentScore ?? snapshot.data!.score,
-                //     _currentPlayerNo ?? snapshot.data!.playerNo,
-                //     _currentConnected ?? snapshot.data!.connected,
-                //   );
-                //   thereIsWinner = false;
-                // }
-
-
-                return StreamProvider<List<Car>>.value(
-                  value: DatabaseServices().cars,
-                  initialData: [],
-
-                  // Replace null with an empty list
-                  child:
-
-                  thereIsWinner? WinnerDialog() :
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        updateCarsList(cars),
-
-                        SizedBox(
-                          height: 90,
-                          width: width - 50,
-                          child: Container(
-                            child: ListView(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              children: List.generate(cars.length, (index) {
-                                if (index >= cars.length) {
-                                  // Handle the case where the index is out of range
-                                  return Container();
-                                }
-                                return Container(
-                                  width: width / cars.length,
-                                  child: PlayerScoreTile(car: cars[index]),
-                                );
-                              }),
-                            ),
-                          ),
-                        ),
-
-                        TextFormField(
-                          initialValue: userData.name,
-                          decoration: textInputDecoration,
-                          //     validator: (val) => val!.isEmpty ? 'Please enter a name' : null,
-                          onChanged: (val) =>
-                              setState(() => _currentName = val),
-                        ),
-                        SizedBox(
-                          height: height / 2,
-                          width: width - 50,
-                          child: Stack(
-                            children: [
-                              ...gifts.map(
-                                (gift) => Positioned(
-                                  left: gift.left.toDouble(),
-                                  top: gift.top.toDouble(),
-                                  child: Container(
-                                    width: gift.size.toDouble(),
-                                    height: gift.size.toDouble(),
-                                    child: gift.isThreat
-                                        ? Image.asset('assets/threat.png')
-                                        : Image.asset('assets/health.png'),
+                                  SizedBox(
+                                    height: 90,
+                                    width: width - 50,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: List.generate(cars.length, (index) {
+                                          if (index >= cars.length) {
+                                            // Handle the case where the index is out of range
+                                            return Container();
+                                          }
+                                          return Container(
+                                            width: 150,
+                                            child: PlayerScoreTile(car: cars[index]),
+                                          );
+                                        }),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
 
 
-                              updateCarsList(cars),
+                                  TextFormField(
+                                    initialValue: userData.name,
+                                    decoration: textInputDecoration,
+                                    //     validator: (val) => val!.isEmpty ? 'Please enter a name' : null,
+                                    onChanged: (val) =>
+                                        setState(() => _currentName = val),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 20, bottom: 20),
+                                    child: SizedBox(
+                                      height: height / 2,
+                                      width: width - 50,
+                                      child: Stack(
+                                        children: [
 
 
-                              checkForWinner(cars),
 
 
-                              ...cars.map(
-                                (car) => car.connected == false
-                                    ? const UselessWidget()
-                                    : Positioned(
-                                        left: car.left.toDouble(),
-                                        top: car.top.toDouble(),
-                                        child: GestureDetector(
-                                          onPanUpdate: (newPosition) {
+                                          ...roads.map(
+                                                (road) => Positioned(
+                                              left: 0,
+                                              top: road.top.toDouble(),
+                                              child: Container(
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(width: 200, child: Image.asset("assets/road.png",)),
+                                                    SizedBox(width: 200, child: Image.asset("assets/road.png",)),
+                                                    SizedBox(width: 200, child: Image.asset("assets/road.png",)),
+                                                  ],
+                                                )
+                                              ),
+                                            ),
+                                          ),
+
+
+                                          ...gifts.map(
+                                            (gift) => Positioned(
+                                              left: gift.left.toDouble(),
+                                              top: gift.top.toDouble(),
+                                              child: Container(
+                                                width: gift.size.toDouble(),
+                                                height: gift.size.toDouble(),
+                                                child: gift.isThreat
+                                                    ? Image.asset(
+                                                        'assets/threat.png')
+                                                    : Image.asset(
+                                                        'assets/health.png'),
+                                              ),
+                                            ),
+                                          ),
+                                          updateCarsList(cars),
+                                          checkForWinner(cars),
+                                          ...cars.map(
+                                            (car) => car.connected == false
+                                                ? const UselessWidget()
+                                                : Positioned(
+                                                    left: car.left.toDouble(),
+                                                    top: car.top.toDouble(),
+                                                    child: GestureDetector(
+                                                      onPanUpdate: (newPosition) {
+                                                        setState(() {
+                                                          gameStarted = true;
+
+                                                          _currentLeft = max(
+                                                                  0,
+                                                                  (_currentLeft ??
+                                                                          0) +
+                                                                      (newPosition
+                                                                          .delta
+                                                                          .dx))
+                                                              .round();
+                                                          if (_currentLeft >
+                                                              (width - 100)) {
+                                                            _currentLeft =
+                                                                (width - 100)
+                                                                    .toInt();
+                                                          }
+                                                          _currentTop = max(
+                                                                  0,
+                                                                  (_currentTop ??
+                                                                          0) +
+                                                                      newPosition
+                                                                          .delta
+                                                                          .dy)
+                                                              .round();
+                                                          if (_currentTop >
+                                                              (height -
+                                                                  height / 2.5)) {
+                                                            _currentTop =
+                                                                (height -
+                                                                        height /
+                                                                            2.5)
+                                                                    .toInt();
+                                                          }
+                                                        });
+
+                                                        if (_currentScore == 0) {
+                                                          _currentScore = snapshot
+                                                              .data!.score;
+                                                        }
+
+                                                        DatabaseServices(
+                                                                uid: user.userID)
+                                                            .updateUserData(
+                                                          _currentName ??
+                                                              snapshot.data!.name,
+                                                          _currentTop ??
+                                                              snapshot.data!.top,
+                                                          _currentLeft ??
+                                                              snapshot.data!.left,
+                                                          _currentScore ??
+                                                              snapshot
+                                                                  .data!.score,
+                                                          _currentPlayerNo ??
+                                                              snapshot
+                                                                  .data!.playerNo,
+                                                          _currentConnected ??
+                                                              snapshot.data!
+                                                                  .connected,
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        height: 75,
+                                                        width: 75,
+                                                        child: Image.asset(
+                                                            'assets/car_${car.playerNo}.png'),
+                                                      ),
+                                                    )),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                          onPressed: () {
                                             setState(() {
-                                              gameStarted = true;
-
                                               _currentLeft = max(
-                                                      0,
-                                                      (_currentLeft ?? 0) +
-                                                          (newPosition
-                                                              .delta.dx))
-                                                  .round();
+                                                  0, (_currentLeft ?? 0) - 40);
+                                            });
+                                            DatabaseServices(uid: user.userID)
+                                                .updateUserData(
+                                              _currentName ??
+                                                  snapshot.data!.name,
+                                              _currentTop ?? snapshot.data!.top,
+                                              _currentLeft ??
+                                                  snapshot.data!.left,
+                                              _currentScore ??
+                                                  snapshot.data!.score,
+                                              _currentPlayerNo ??
+                                                  snapshot.data!.playerNo,
+                                              _currentConnected ??
+                                                  snapshot.data!.connected,
+                                            );
+                                          },
+                                          child: const Icon(Icons.arrow_back)),
+
+
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _currentLeft = max(
+                                                  0, (_currentLeft ?? 0) + 40);
                                               if (_currentLeft >
                                                   (width - 100)) {
                                                 _currentLeft =
                                                     (width - 100).toInt();
                                               }
-                                              _currentTop = max(
-                                                      0,
-                                                      (_currentTop ?? 0) +
-                                                          newPosition.delta.dy)
-                                                  .round();
-                                              if (_currentTop >
-                                                  (height - height / 2.5)) {
-                                                _currentTop =
-                                                    (height - height / 2.5)
-                                                        .toInt();
-                                              }
                                             });
-
-                                            if (_currentScore == 0) {
-                                              _currentScore =
-                                                  snapshot.data!.score;
-                                            }
 
                                             DatabaseServices(uid: user.userID)
                                                 .updateUserData(
@@ -224,152 +325,183 @@ class _SettingsFormState extends State<SettingsForm> {
                                                   snapshot.data!.connected,
                                             );
                                           },
-                                          child: Container(
-                                            height: 75,
-                                            width: 75,
-                                            child: Image.asset(
-                                                'assets/car_${car.playerNo}.png'),
-                                          ),
-                                        )),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        //
-                        // Center(
-                        //   child: Text(gameStarted? '': 'Drag to start', style: const TextStyle(
-                        //     color: Colors.blue,
-                        //     fontSize: 30,
-                        //     decoration: TextDecoration.none,
-                        //
-                        //   ),),
-                        // ),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _currentLeft =
-                                        max(0, (_currentLeft ?? 0) - 40);
-                                  });
-                                  DatabaseServices(uid: user.userID)
-                                      .updateUserData(
-                                    _currentName ?? snapshot.data!.name,
-                                    _currentTop ?? snapshot.data!.top,
-                                    _currentLeft ?? snapshot.data!.left,
-                                    _currentScore ?? snapshot.data!.score,
-                                    _currentPlayerNo ?? snapshot.data!.playerNo,
-                                    _currentConnected ??
-                                        snapshot.data!.connected,
-                                  );
-                                },
-                                child: const Icon(Icons.arrow_back)),
-                            ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _currentLeft =
-                                        max(0, (_currentLeft ?? 0) + 40);
-                                    if (_currentLeft > (width - 100)) {
-                                      _currentLeft = (width - 100).toInt();
-                                    }
-                                  });
-
-                                  DatabaseServices(uid: user.userID)
-                                      .updateUserData(
-                                    _currentName ?? snapshot.data!.name,
-                                    _currentTop ?? snapshot.data!.top,
-                                    _currentLeft ?? snapshot.data!.left,
-                                    _currentScore ?? snapshot.data!.score,
-                                    _currentPlayerNo ?? snapshot.data!.playerNo,
-                                    _currentConnected ??
-                                        snapshot.data!.connected,
-                                  );
-                                },
-                                child: const Icon(Icons.arrow_forward)),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                                child: const Text(
-                                  'Update',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () async {
-                                  // if(_formKey.currentState!.validate()){
-                                  await DatabaseServices(uid: user.userID)
-                                      .updateUserData(
-                                    _currentName ?? snapshot.data!.name,
-                                    _currentTop ?? snapshot.data!.top,
-                                    _currentLeft ?? snapshot.data!.left,
-                                    _currentScore ?? snapshot.data!.score,
-                                    _currentPlayerNo ?? snapshot.data!.playerNo,
-                                    _currentConnected ??
-                                        snapshot.data!.connected,
-                                  );
-                                  Navigator.of(context).pop;
-                                }
-                                //    }
-                                ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _currentConnected = false;
-                                });
-                                DatabaseServices(uid: user.userID)
-                                    .updateUserData(
-                                  _currentName ?? snapshot.data!.name,
-                                  _currentTop ?? snapshot.data!.top,
-                                  _currentLeft ?? snapshot.data!.left,
-                                  _currentScore ?? snapshot.data!.score,
-                                  _currentPlayerNo ?? snapshot.data!.playerNo,
-                                  _currentConnected ?? snapshot.data!.connected,
-                                );
-
-                                for (Car car in cars) {
-                                  debugPrint("${car.name}   ");
-                                }
-
-                                _authServices.signOut();
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "Leave game",
-                                    style: TextStyle(
-                                      color: Colors.red[900],
-                                      fontSize: 15,
-                                    ),
+                                          child:
+                                              const Icon(Icons.arrow_forward)),
+                                    ],
                                   ),
-                                  const SizedBox(
-                                    width: 5,
+
+
+                                   Container(color: Colors.white, height: 10,),
+
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+
+                                      ElevatedButton(
+
+                                        onPressed: () {
+                                          setState(() {
+                                            _currentConnected = false;
+                                          });
+                                          DatabaseServices(uid: user.userID)
+                                              .updateUserData(
+                                            _currentName ?? snapshot.data!.name,
+                                            _currentTop ?? snapshot.data!.top,
+                                            _currentLeft ?? snapshot.data!.left,
+                                            _currentScore ??
+                                                snapshot.data!.score,
+                                            _currentPlayerNo ??
+                                                snapshot.data!.playerNo,
+                                            _currentConnected ??
+                                                snapshot.data!.connected,
+                                          );
+
+                                          for (Car car in cars) {
+                                            debugPrint("${car.name}   ");
+                                          }
+
+                                          _authServices.signOut();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white
+                                        ),
+
+
+                                        child:
+                                            Text(
+                                              "Leave game",
+                                              style: TextStyle(
+                                                color: Colors.red[900],
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                      ),
+
+
+                                            const SizedBox(width: 150,),
+
+                                            FloatingActionButton(
+                                              backgroundColor: Colors.white,
+                                              onPressed: () {
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return StreamProvider<
+                                                        List<Message>>.value(
+                                                      value: DatabaseServices()
+                                                          .chatMessages,
+                                                      initialData: [],
+                                                      child: Consumer<
+                                                          List<Message>>(
+                                                        builder: (context,
+                                                            chats, _) {
+                                                          return SingleChildScrollView(
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .grey[200],
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(10),
+                                                                child:
+                                                                    Container(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  height:
+                                                                      height /
+                                                                          2,
+                                                                  child:
+                                                                      SingleChildScrollView(
+                                                                    child:
+                                                                        Column(
+                                                                      children: [
+                                                                        ...chats
+                                                                            .map(
+                                                                              (chat) => MessageBubble(
+                                                                                message: chat,
+                                                                                senderName: chat.senderName,
+                                                                                isMe: chat.senderName == userData.name ? true : false,
+                                                                              ),
+                                                                            )
+                                                                            .toList(),
+                                                                        const SizedBox(
+                                                                            height:
+                                                                                20.0),
+                                                                        SizedBox(
+                                                                          width: width - 200,
+                                                                          height: 65,
+                                                                          child: TextField(
+                                                                            controller:
+                                                                                _textEditingController,
+                                                                            decoration:
+                                                                                InputDecoration(
+                                                                                  border: OutlineInputBorder(
+                                                                                    borderRadius: BorderRadius.circular(30.0),
+
+                                                                                  ),// Adjust the value as needed
+                                                                                  enabledBorder: OutlineInputBorder(
+                                                                                    borderRadius: BorderRadius.circular(30.0),
+                                                                                  ),//
+                                                                                    suffix: IconButton(
+                                                                                  onPressed: () {
+                                                                                    String message = _textEditingController.text.trim();
+                                                                                    if (message.isNotEmpty) {
+                                                                                      String senderName = userData.name;
+                                                                                      DatabaseServices().sendChatMessage(message, senderName);
+                                                                                      _textEditingController.clear();
+                                                                                    }
+                                                                                  },
+                                                                                  icon: Icon(
+                                                                                    Icons.send,
+                                                                                    color: Colors.blue[900],
+                                                                                  )),
+                                                                              labelText:
+                                                                                  'New Message',
+                                                                            ),
+                                                                            onSubmitted:
+                                                                                (value) {
+                                                                              String
+                                                                                  message =
+                                                                                  _textEditingController.text.trim();
+                                                                              if (message.isNotEmpty) {
+                                                                                String senderName = userData.name;
+                                                                                DatabaseServices().sendChatMessage(message, senderName);
+                                                                                _textEditingController.clear();
+                                                                              }
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child:
+                                                   Icon(Icons.chat_rounded, color: Colors.blue[900],)
+                                            ),
+                                          ],
+                                        ),
+
+                                    ],
                                   ),
-                                  Icon(
-                                    Icons.logout,
-                                    color: Colors.red[900],
-                                    size: 15,
-                                  )
-                                ],
+
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              } else {
-                return const LoadingWidget();
-              }
-            }),
+                          );
+
+                } else {
+                  return const LoadingWidget();
+                }
+              }),
+        ],
       ),
     );
   }
@@ -390,7 +522,11 @@ class _SettingsFormState extends State<SettingsForm> {
 
   List<Gift> gifts = [];
 
+  List<Road> roads = [];
+
   late Timer timer;
+
+
 
   UserData tempUserData = UserData(
     uid: "43534453",
@@ -410,12 +546,35 @@ class _SettingsFormState extends State<SettingsForm> {
 
   void startGame(UserData userData) {
     gifts = [];
+    roads.add(Road( top: -200));
+    roads.add(Road( top: -100));
+    roads.add(Road( top: 0));
+    roads.add(Road( top: 100));
+    roads.add(Road( top: 200));
+    roads.add(Road( top: 300));
+    roads.add(Road( top: 400));
+    roads.add(Road( top: 500));
+    roads.add(Road( top: 600));
+    roads.add(Road( top: 700));
+
+
 
     timer = Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
       setState(() {
         // Update gift positions
-        for (int i = 0; i < gifts.length; i++) {
+
+        for (int i = 0; i < roads.length; i++)
+      {
+        roads[i].top += 25;
+      }
+
+        if (timer.tick%5 == 0)
+        {roads.add(Road(top: -200));}
+
+
+          for (int i = 0; i < gifts.length; i++) {
           gifts[i].top += 25;
+
 
           if (checkCollision(gifts[i], userData)) {
             if (gifts[i].isThreat) {
@@ -437,8 +596,11 @@ class _SettingsFormState extends State<SettingsForm> {
           if (gifts[i].top > 800) {
             gifts.removeAt(i);
           }
-        }
 
+          if (roads[i].top > 800) {
+            roads.removeAt(i);
+          }
+        }
         // Add new gifts randomly
         if (Random().nextInt(100) < 10) {
           int size = 40 + Random().nextInt(20);
@@ -447,37 +609,13 @@ class _SettingsFormState extends State<SettingsForm> {
           bool isThreat = Random().nextBool();
           gifts.add(
               Gift(left: left - 100, top: 0, size: size, isThreat: isThreat));
+
+
         }
       });
     });
   }
 
-  // // Check game over condition
-  // if (car.score < 0) {
-  //   timer.cancel();
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Game Over'),
-  //         content: const Text('Your score is negative!'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               player.score = 0;
-  //               Navigator.of(context).pop();
-  //               startGame();
-  //             },
-  //             child: const Text('Restart'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //
-  //
-  //   );
-  // }
 
   Widget checkForWinner(List<Car> cars) {
     for (Car car in cars) {
@@ -488,74 +626,38 @@ class _SettingsFormState extends State<SettingsForm> {
         //   car.score = 0;
         // }
 
-          _currentScore = 0;
-          score_changed = true;
-          thereIsWinner = true;
-          _currentConnected = false;
-
+        _currentScore = 0;
+        score_changed = true;
+        thereIsWinner = true;
+        _currentConnected = false;
+        _winnerName = car.name;
       }
     }
     return Container();
   }
-  //       showModalBottomSheet(
-  //         context: context,
-  //         builder: (context) {
-  //           return Container(
-  //             height: 600,
-  //             padding:
-  //                 const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-  //             child: Column(
-  //               children: [
-  //                 const Text('Yaaay'),
-  //                 Text('We have a winner!\n congrats,${car.name}'),
-  //                 TextButton(
-  //                   onPressed: () {
-  //                     for (Car car in cars) {
-  //                       car.score = 0;
-  //                     }
-  //                     setState(() {
-  //                       _currentScore = 0;
-  //                       score_changed = true;
-  //                     });
-  //
-  //                     Navigator.of(context).pop();
-  //                     _authServices.signOut();
-  //                   },
-  //                   child: const Text('leave'),
-  //                 ),
-  //               ],
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     }
-  //   }
-  //
-  // }
 
-
-  Widget WinnerDialog() =>
-      Container(
-    child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text('Yaaay'),
-          Text('We have a winner!\n congrats'),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              thereIsWinner = false;
-              _authServices.signOut();
-            },
-            child: Text("Leave game"),
-
-      ),
-      ],
-      ),
-    ),
-  );
+  Widget WinnerDialog() => Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text('Yaaay', style: TextStyle(fontSize: 40),),
+              Text('We have a winner!\n congrats $_winnerName', style: const TextStyle(fontSize: 40),),
+             const SizedBox(height: 30,),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  thereIsWinner = false;
+                  DatabaseServices().deleteAllChats();
+                  _authServices.signOut();
+                },
+                child: const Text("Leave game", style: TextStyle(fontSize: 30),),
+              ),
+            ],
+          ),
+        ),
+      );
 
   @override
   void dispose() {
