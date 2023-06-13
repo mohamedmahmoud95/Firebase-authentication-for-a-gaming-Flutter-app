@@ -51,6 +51,7 @@ class MessageBubble extends StatelessWidget {
               const SizedBox(width: 10,),
 
           CircleAvatar(
+            radius: 25,
             backgroundColor: Colors.blue.shade900,
             child:  Text(
               senderName,

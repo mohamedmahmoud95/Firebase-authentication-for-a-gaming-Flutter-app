@@ -41,6 +41,7 @@ final AuthServices _auth = AuthServices();
         value: AuthServices().userStream,
         initialData: null,
         child: const MaterialApp(
+          debugShowCheckedModeBanner: false,
             home: HomeScreen())
   ),
   )

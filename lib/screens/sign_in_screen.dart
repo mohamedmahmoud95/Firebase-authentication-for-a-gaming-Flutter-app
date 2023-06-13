@@ -34,6 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.blue[900],
             title: const Text("Sign In"),
             actions: [
               IconButton(
@@ -124,7 +125,6 @@ class _SignInScreenState extends State<SignInScreen> {
                                 loading = false;
                               });
                             };
-
                         },
 
                         child: const Text("Sign In as Mohamed")),
