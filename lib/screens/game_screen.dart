@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_services/firebase_auth_services.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/screens/settings_form.dart';
+import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/widgets/responsive.dart';
 import 'package:provider/provider.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_services/cloud_firestore_database_services.dart';
 
@@ -51,20 +52,8 @@ class _GameScreenState extends State<GameScreen> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue[900],
-          title: const Text("Game screen"),
-          actions: [
-            IconButton(
-              onPressed: () {
-                _authServices.signOut();
-              },
-              icon: const Icon(Icons.logout),
-            ),
-            IconButton(
-              icon: const Icon(Icons.chat),
-              onPressed: () => _showChats()
-                //Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  ChatsScreen()))
-            ),
-          ],
+          title: const Text("2D Car Game"),
+
         ),
 
 
@@ -94,8 +83,8 @@ class _GameScreenState extends State<GameScreen> {
                       Center(
                         child: SizedBox(
                           width: width-50,
-                            height: height - height / 4,
-                            child: SettingsForm()),
+                            height: height - height / 6,
+                            child: Responsive(child: SettingsForm())),
                       ),
                     ],
                   ),

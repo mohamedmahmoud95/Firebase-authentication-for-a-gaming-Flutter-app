@@ -117,4 +117,17 @@ class DatabaseServices {
       'timestamp': DateTime.now(),
     });
   }
+
+
+  Future<void> deleteAllChats() async {
+    final QuerySnapshot snapshot = await chatCollection.get();
+    final List<Future<void>> deleteFutures = [];
+
+    for (final DocumentSnapshot doc in snapshot.docs) {
+      deleteFutures.add(doc.reference.delete());
+    }
+
+    await Future.wait(deleteFutures);
+  }
+
 }

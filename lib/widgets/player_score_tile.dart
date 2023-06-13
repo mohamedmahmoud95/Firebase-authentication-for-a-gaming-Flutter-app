@@ -10,21 +10,22 @@ class PlayerScoreTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB( 8,8,58,8),
+      padding: const EdgeInsets.all(8),
       child: Card(
-        color: Colors.blue[50],
-        margin: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(car.name),
-            const SizedBox(height: 5,),
+          color: Colors.blue[50],
+          margin: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(car.name),
+              const SizedBox(height: 5,),
 
-            Text("${car.score }"),
-          ],
-        )
+              Text("${car.score }"),
+            ],
+          )
 
-      ),
+        ),
+
     );
   }
 }

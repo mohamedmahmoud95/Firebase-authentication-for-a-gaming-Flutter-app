@@ -37,7 +37,7 @@ class _SettingsFormState extends State<SettingsForm> {
   int _currentScore = 0;
   int _currentPlayerNo = 0;
   bool _currentConnected = true;
-
+  String _winnerName = '';
   bool score_changed = false;
 
   bool thereIsWinner = false;
@@ -55,10 +55,10 @@ class _SettingsFormState extends State<SettingsForm> {
       context: context,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Chats',
                 style: TextStyle(
                   fontSize: 20.0,
@@ -121,48 +121,48 @@ class _SettingsFormState extends State<SettingsForm> {
     final height = MediaQuery.of(context).size.height;
     totalWidth = width.toInt();
 
-    return Material(
-      child: Scaffold(
-        body: Stack(
-          children: [
-            StreamBuilder<UserData>(
-                stream: DatabaseServices(uid: user.userID).userData,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    UserData? userData = snapshot.data;
+    return Scaffold(
+      body: Stack(
+        children: [
+          StreamBuilder<UserData>(
+              stream: DatabaseServices(uid: user.userID).userData,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  UserData? userData = snapshot.data;
 
-                    tempUserData = userData!;
+                  tempUserData = userData!;
 
-                    if (_currentName == '' && _currentScore == 0) {
-                      _currentName = snapshot.data!.name;
-                      _currentScore = snapshot.data!.score;
-                    }
+                  if (_currentName == '' && _currentScore == 0) {
+                    _currentName = snapshot.data!.name;
+                    _currentScore = snapshot.data!.score;
+                  }
 
-                    if (thereIsWinner == true) {
-                      DatabaseServices().resetScores();
-                    }
+                  if (thereIsWinner == true) {
+                    DatabaseServices().resetScores();
+                  }
 
-                    if (score_changed == true) {
-                      DatabaseServices(uid: user.userID).updateUserData(
-                        _currentName ?? snapshot.data!.name,
-                        _currentTop ?? snapshot.data!.top,
-                        _currentLeft ?? snapshot.data!.left,
-                        _currentScore ?? snapshot.data!.score,
-                        _currentPlayerNo ?? snapshot.data!.playerNo,
-                        _currentConnected ?? snapshot.data!.connected,
-                      );
-                      score_changed = false;
-                    }
+                  if (score_changed == true) {
+                    DatabaseServices(uid: user.userID).updateUserData(
+                      _currentName ?? snapshot.data!.name,
+                      _currentTop ?? snapshot.data!.top,
+                      _currentLeft ?? snapshot.data!.left,
+                      _currentScore ?? snapshot.data!.score,
+                      _currentPlayerNo ?? snapshot.data!.playerNo,
+                      _currentConnected ?? snapshot.data!.connected,
+                    );
+                    score_changed = false;
+                  }
 
-                    return StreamProvider<List<Car>>.value(
-                      value: DatabaseServices().cars,
-                      initialData: [],
+                  return StreamProvider<List<Car>>.value(
+                    value: DatabaseServices().cars,
+                    initialData: [],
 
-                      // Replace null with an empty list
-                      child: thereIsWinner
-                          ? WinnerDialog()
-                          : Form(
-                              key: _formKey,
+                    // Replace null with an empty list
+                    child: thereIsWinner
+                        ? WinnerDialog()
+                        : Form(
+                            key: _formKey,
+                            child: SingleChildScrollView(
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -172,25 +172,24 @@ class _SettingsFormState extends State<SettingsForm> {
                                   SizedBox(
                                     height: 90,
                                     width: width - 50,
-                                    child: Container(
-                                      child: ListView(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        children:
-                                            List.generate(cars.length, (index) {
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: List.generate(cars.length, (index) {
                                           if (index >= cars.length) {
                                             // Handle the case where the index is out of range
                                             return Container();
                                           }
                                           return Container(
-                                            width: width / cars.length,
-                                            child: PlayerScoreTile(
-                                                car: cars[index]),
+                                            width: 150,
+                                            child: PlayerScoreTile(car: cars[index]),
                                           );
                                         }),
                                       ),
                                     ),
                                   ),
+
 
                                   TextFormField(
                                     initialValue: userData.name,
@@ -200,7 +199,7 @@ class _SettingsFormState extends State<SettingsForm> {
                                         setState(() => _currentName = val),
                                   ),
                                   SizedBox(
-                                    height: height / 2,
+                                    height: height / 1.8,
                                     width: width - 50,
                                     child: Stack(
                                       children: [
@@ -302,15 +301,6 @@ class _SettingsFormState extends State<SettingsForm> {
                                     ),
                                   ),
 
-                                  //
-                                  // Center(
-                                  //   child: Text(gameStarted? '': 'Drag to start', style: const TextStyle(
-                                  //     color: Colors.blue,
-                                  //     fontSize: 30,
-                                  //     decoration: TextDecoration.none,
-                                  //
-                                  //   ),),
-                                  // ),
 
                                   Row(
                                     mainAxisAlignment:
@@ -338,6 +328,8 @@ class _SettingsFormState extends State<SettingsForm> {
                                             );
                                           },
                                           child: const Icon(Icons.arrow_back)),
+
+
                                       ElevatedButton(
                                           onPressed: () {
                                             setState(() {
@@ -369,40 +361,16 @@ class _SettingsFormState extends State<SettingsForm> {
                                               const Icon(Icons.arrow_forward)),
                                     ],
                                   ),
+
+
+                                 const  SizedBox(height: 10,),
+
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
+
                                       ElevatedButton(
-                                          child: const Text(
-                                            'Update',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          onPressed: () async {
-                                            // if(_formKey.currentState!.validate()){
-                                            await DatabaseServices(
-                                                    uid: user.userID)
-                                                .updateUserData(
-                                              _currentName ??
-                                                  snapshot.data!.name,
-                                              _currentTop ?? snapshot.data!.top,
-                                              _currentLeft ??
-                                                  snapshot.data!.left,
-                                              _currentScore ??
-                                                  snapshot.data!.score,
-                                              _currentPlayerNo ??
-                                                  snapshot.data!.playerNo,
-                                              _currentConnected ??
-                                                  snapshot.data!.connected,
-                                            );
-                                            Navigator.of(context).pop;
-                                          }
-                                          //    }
-                                          ),
-                                      const SizedBox(
-                                        width: 20,
-                                      ),
-                                      TextButton(
+
                                         onPressed: () {
                                           setState(() {
                                             _currentConnected = false;
@@ -426,10 +394,12 @@ class _SettingsFormState extends State<SettingsForm> {
 
                                           _authServices.signOut();
                                         },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white
+                                        ),
+
+
+                                        child:
                                             Text(
                                               "Leave game",
                                               style: TextStyle(
@@ -437,15 +407,13 @@ class _SettingsFormState extends State<SettingsForm> {
                                                 fontSize: 15,
                                               ),
                                             ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Icon(
-                                              Icons.logout,
-                                              color: Colors.red[900],
-                                              size: 15,
-                                            ),
-                                            ElevatedButton(
+                                      ),
+
+
+                                            const SizedBox(width: 150,),
+
+                                            FloatingActionButton(
+                                              backgroundColor: Colors.white,
                                               onPressed: () {
                                                 showModalBottomSheet(
                                                   context: context,
@@ -549,23 +517,23 @@ class _SettingsFormState extends State<SettingsForm> {
                                                 );
                                               },
                                               child:
-                                                  const Text('Open Chat List'),
+                                                   Icon(Icons.chat_rounded, color: Colors.blue[900],)
                                             ),
                                           ],
                                         ),
-                                      ),
+
                                     ],
                                   ),
-                                ],
+
                               ),
                             ),
-                    );
-                  } else {
-                    return const LoadingWidget();
-                  }
-                }),
-          ],
-        ),
+                          );
+
+                } else {
+                  return const LoadingWidget();
+                }
+              }),
+        ],
       ),
     );
   }
@@ -648,32 +616,6 @@ class _SettingsFormState extends State<SettingsForm> {
     });
   }
 
-  // // Check game over condition
-  // if (car.score < 0) {
-  //   timer.cancel();
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Game Over'),
-  //         content: const Text('Your score is negative!'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               player.score = 0;
-  //               Navigator.of(context).pop();
-  //               startGame();
-  //             },
-  //             child: const Text('Restart'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //
-  //
-  //   );
-  // }
 
   Widget checkForWinner(List<Car> cars) {
     for (Car car in cars) {
@@ -688,6 +630,7 @@ class _SettingsFormState extends State<SettingsForm> {
         score_changed = true;
         thereIsWinner = true;
         _currentConnected = false;
+        _winnerName = car.name;
       }
     }
     return Container();
@@ -699,15 +642,17 @@ class _SettingsFormState extends State<SettingsForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text('Yaaay'),
-              Text('We have a winner!\n congrats'),
+              const Text('Yaaay', style: TextStyle(fontSize: 40),),
+              Text('We have a winner!\n congrats $_winnerName', style: const TextStyle(fontSize: 40),),
+             const SizedBox(height: 30,),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   thereIsWinner = false;
+                  DatabaseServices().deleteAllChats();
                   _authServices.signOut();
                 },
-                child: Text("Leave game"),
+                child: const Text("Leave game", style: TextStyle(fontSize: 30),),
               ),
             ],
           ),
