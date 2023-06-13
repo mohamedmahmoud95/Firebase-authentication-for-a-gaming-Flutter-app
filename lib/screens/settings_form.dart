@@ -64,8 +64,14 @@ class _SettingsFormState extends State<SettingsForm> {
                 if (_currentName == '' && _currentScore == 0) {
                   _currentName = snapshot.data!.name;
                   _currentScore = snapshot.data!.score;
-
                 }
+
+
+                if(thereIsWinner == true)
+                {
+                  DatabaseServices().resetScores();
+                }
+
 
                 if (score_changed == true) {
                   DatabaseServices(uid: user.userID).updateUserData(
@@ -78,6 +84,8 @@ class _SettingsFormState extends State<SettingsForm> {
                   );
                   score_changed = false;
                 }
+
+
 
                 // if (thereIsWinner == true) {
                 //   DatabaseServices(uid: user.userID).updateUserData(
@@ -538,6 +546,7 @@ class _SettingsFormState extends State<SettingsForm> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
+              thereIsWinner = false;
               _authServices.signOut();
             },
             child: Text("Leave game"),

@@ -75,6 +75,17 @@ class DatabaseServices {
     }).toList();
   }
 
+
+  Future<void> resetScores() async {
+    // Retrieve all cars
+    final QuerySnapshot snapshot = await carCollection.get();
+
+    // Update each car's score to zero
+    for (final DocumentSnapshot doc in snapshot.docs) {
+      await doc.reference.update({'score': 0});
+    }
+  }
+
 // List<Car> _carListFromSnapshot(QuerySnapshot snapshot) {
 //   return snapshot.docs.map((doc) {
 //     return Car(
