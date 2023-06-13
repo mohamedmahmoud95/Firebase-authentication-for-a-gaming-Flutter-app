@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_services/cloud_firestore_database_services.dart';
 
 import '../models/car.dart';
+import '../models/message.dart';
 import '../widgets/players_score_list.dart';
+import 'ChatsScreen.dart';
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
 
@@ -16,16 +18,14 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   final AuthServices _authServices = AuthServices();
 
-  // void _showSettingsPanel() {
-  //   showModalBottomSheet(context: context,
-  //       builder: (context) {
-  //     return Container(
-  //       height: 600,
-  //       padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-  //       child: SettingsForm(),
-  //     );
-  //   });
-  // }
+  void _showChats() {
+    showModalBottomSheet(context: context,
+        builder: (context) {
+      return  ChatsScreen();
+      });
+  }
+
+
 
 
   @override
@@ -33,7 +33,20 @@ class _GameScreenState extends State<GameScreen> {
 
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    return MaterialApp(
+    return
+     MultiProvider(
+        providers: [
+        StreamProvider<List<Message>>.value(
+        value: DatabaseServices().chatMessages,
+    initialData: [],
+    ),
+    StreamProvider<List<Car>>.value(
+    value: DatabaseServices().cars,
+    initialData: [],
+    ),
+    ],
+
+     child:  MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
@@ -46,17 +59,20 @@ class _GameScreenState extends State<GameScreen> {
               },
               icon: const Icon(Icons.logout),
             ),
-            // IconButton(
-            //   icon: const Icon(Icons.settings),
-            //   onPressed: () => _showSettingsPanel(),
-            // ),
+            IconButton(
+              icon: const Icon(Icons.chat),
+              onPressed: () => _showChats()
+                //Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  ChatsScreen()))
+            ),
           ],
         ),
 
-        body: StreamProvider<List<Car>>.value(
-          value: DatabaseServices().cars,
-          initialData: [], // Replace null with an empty list
-          child:
+
+        body:
+        // StreamProvider<List<Car>>.value(
+        //   value: DatabaseServices().cars,
+        //   initialData: [], // Replace null with an empty list
+        //  child:
 
           Container(
             height: height,
@@ -74,14 +90,7 @@ class _GameScreenState extends State<GameScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Card(
-                      //   child: Container(
-                      //     height: 75,
-                      //     width: width ,
-                      //     child: PlayersScoreList(),
-                      //   ),
-                      // ),
-                   //   CarList(),
+
                       Center(
                         child: SizedBox(
                           width: width-50,
@@ -96,6 +105,7 @@ class _GameScreenState extends State<GameScreen> {
           ),
         ),
       ),
+ //    ),
     );
   }
 }
