@@ -8,7 +8,6 @@ import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_
 import '../models/car.dart';
 import '../models/message.dart';
 import '../widgets/players_score_list.dart';
-import 'ChatsScreen.dart';
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
 
@@ -19,12 +18,6 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   final AuthServices _authServices = AuthServices();
 
-  void _showChats() {
-    showModalBottomSheet(context: context,
-        builder: (context) {
-      return  ChatsScreen();
-      });
-  }
 
 
 

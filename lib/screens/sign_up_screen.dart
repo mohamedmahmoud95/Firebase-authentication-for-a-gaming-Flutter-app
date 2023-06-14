@@ -58,6 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   TextFormField(
                     decoration: textInputDecoration.copyWith(
+
                         hintText: "Email",
                         prefixIcon: const Icon(Icons.email_outlined)),
                     textInputAction: TextInputAction.next,
@@ -91,6 +92,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 20,
                   ),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20), // Set the border radius
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24), // Set the padding
+                    ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           setState(() {
