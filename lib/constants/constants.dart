@@ -2,16 +2,19 @@
 
 import 'package:flutter/material.dart';
 
-const textInputDecoration = InputDecoration(
+InputDecoration textInputDecoration = InputDecoration(
+
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(30.0),
+  ),//
+
   enabledBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(20)),
-  ),
+    borderRadius: BorderRadius.circular(30.0),
+  ),//
 
   focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(20)),
-    borderSide: BorderSide(color: Colors.blue, width: 1)
-
+    borderSide: const BorderSide(width: 1, color: Colors.blue),
+    borderRadius: BorderRadius.circular(30.0),
   ),
   focusColor: Colors.blue,
-
 );

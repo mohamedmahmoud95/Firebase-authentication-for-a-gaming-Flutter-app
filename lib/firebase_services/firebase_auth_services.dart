@@ -25,6 +25,7 @@ class AuthServices {
     try {
       UserCredential authResult = await _auth.signInAnonymously();
       final User? firebaseUser = authResult.user;
+      DatabaseServices(uid: firebaseUser?.uid).updateUserData( 'userName', 100, 100, 0, 0, true);
       return _createAppUserFromFirebaseUser(firebaseUser!);
     } catch (e) {
       debugPrint("$e");
