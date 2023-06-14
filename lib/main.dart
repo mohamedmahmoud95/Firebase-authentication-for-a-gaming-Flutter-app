@@ -5,6 +5,7 @@ import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/screens/home_screen.dart';
+import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/widgets/responsive.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -40,9 +41,11 @@ final AuthServices _auth = AuthServices();
   child: StreamProvider<AppUser?>.value(
         value: AuthServices().userStream,
         initialData: null,
-        child: const MaterialApp(
-          debugShowCheckedModeBanner: false,
-            home: HomeScreen())
+        child: Responsive(
+          child: const MaterialApp(
+            debugShowCheckedModeBanner: false,
+              home: HomeScreen()),
+        )
   ),
   )
   ;

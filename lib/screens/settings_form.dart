@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_services/cloud_firestore_database_services.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/widgets/loading_widget.dart';
@@ -16,7 +15,6 @@ import '../models/road.dart';
 import '../models/user.dart';
 import '../widgets/message_bubble.dart';
 import '../widgets/player_score_tile.dart';
-import 'chat_bottom_sheet.dart';
 
 class SettingsForm extends StatefulWidget {
   @override
@@ -556,8 +554,6 @@ class _SettingsFormState extends State<SettingsForm> {
     roads.add(Road( top: 500));
     roads.add(Road( top: 600));
     roads.add(Road( top: 700));
-
-
 
     timer = Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
       setState(() {
