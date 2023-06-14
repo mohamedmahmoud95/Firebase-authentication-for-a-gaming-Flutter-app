@@ -40,6 +40,7 @@ class _SettingsFormState extends State<SettingsForm> {
   bool score_changed = false;
 
   bool thereIsWinner = false;
+  bool nameIsSubmitted = false;
 
   bool gameStarted = false;
   final AuthServices _authServices = AuthServices();
@@ -133,13 +134,45 @@ class _SettingsFormState extends State<SettingsForm> {
                                   ),
 
 
-                                  TextFormField(
-                                    initialValue: userData.name,
-                                    decoration: textInputDecoration,
-                                    //     validator: (val) => val!.isEmpty ? 'Please enter a name' : null,
-                                    onChanged: (val) =>
-                                        setState(() => _currentName = val),
-                                  ),
+                                  nameIsSubmitted ? const EmptyWidget()
+                                      :
+
+                                      TextFormField(
+                                        decoration: textInputDecoration.copyWith(
+                                            border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(30.0),
+                                            ),//
+
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(30.0),
+                                            ),//
+
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(width: 1, color: Colors.blue),
+                                              borderRadius: BorderRadius.circular(30.0),
+                                            ),
+
+                                            label: const Text("Your name"),
+                                            hintText: "Your name",
+
+                                            prefixIcon: const Icon(Icons.person),
+                                          suffixIcon:  IconButton(
+                                              onPressed:  (){ setState(() => nameIsSubmitted = true);},
+                                              icon: const Icon(Icons.done)),
+                                        ),
+
+                                        initialValue: userData.name,
+                                        onChanged: (val) =>
+                                            setState(() => _currentName = val),
+
+                                        onFieldSubmitted: (val){
+                                          setState(() {
+                                               _currentName = val;
+                                          });
+                                        },
+                                      ),
+
+
                                   Padding(
                                     padding: const EdgeInsets.only(top: 20, bottom: 20),
                                     child: SizedBox(
@@ -187,7 +220,7 @@ class _SettingsFormState extends State<SettingsForm> {
                                           checkForWinner(cars),
                                           ...cars.map(
                                             (car) => car.connected == false
-                                                ? const UselessWidget()
+                                                ? const EmptyWidget()
                                                 : Positioned(
                                                     left: car.left.toDouble(),
                                                     top: car.top.toDouble(),
@@ -504,6 +537,7 @@ class _SettingsFormState extends State<SettingsForm> {
     );
   }
 
+
   bool checkCollision(Gift gift, UserData userData) {
     int carLeft = _currentLeft;
     int carTop = _currentTop;
@@ -525,7 +559,6 @@ class _SettingsFormState extends State<SettingsForm> {
   late Timer timer;
 
 
-
   UserData tempUserData = UserData(
     uid: "43534453",
     name: "userName",
@@ -544,6 +577,10 @@ class _SettingsFormState extends State<SettingsForm> {
 
   void startGame(UserData userData) {
     gifts = [];
+
+    roads.add(Road( top: -500));
+    roads.add(Road( top: -400));
+    roads.add(Road( top: -300));
     roads.add(Road( top: -200));
     roads.add(Road( top: -100));
     roads.add(Road( top: 0));
@@ -564,7 +601,7 @@ class _SettingsFormState extends State<SettingsForm> {
         roads[i].top += 25;
       }
 
-        if (timer.tick%5 == 0)
+        if (timer.tick%4 == 0)
         {roads.add(Road(top: -200));}
 
 
@@ -662,8 +699,8 @@ class _SettingsFormState extends State<SettingsForm> {
   }
 }
 
-class UselessWidget extends StatelessWidget {
-  const UselessWidget({Key? key}) : super(key: key);
+class EmptyWidget extends StatelessWidget {
+  const EmptyWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
