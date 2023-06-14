@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/firebase_services/firebase_auth_services.dart';
+import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/widgets/button_widget.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/widgets/loading_widget.dart';
 
 import '../constants/constants.dart';
@@ -55,8 +56,21 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     TextFormField(
                       decoration: textInputDecoration.copyWith(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),//
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),//
+
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(width: 1, color: Colors.blue),
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          label: const Text("Email"),
                           hintText: "Email",
                           prefixIcon: const Icon(Icons.email_outlined)),
+
                       textInputAction: TextInputAction.next,
                       validator: (value) =>
                       value!.isEmpty ? "Required field is empty!" : null,
@@ -67,10 +81,23 @@ class _SignInScreenState extends State<SignInScreen> {
                       },
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
                     TextFormField(
                       decoration: textInputDecoration.copyWith(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),//
+
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),//
+
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(width: 1, color: Colors.blue),
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          label: const Text("Password"),
                           hintText: "Password",
                           prefixIcon: const Icon(Icons.key)),
                       validator: (value) =>
@@ -85,9 +112,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       },
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
-                    ElevatedButton(
+                    ButtonWidget(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             setState(() {
@@ -111,28 +138,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
 
 
-                    ElevatedButton(
-                        onPressed: () async {
-                            setState(() {
-                              loading = true;
-                            });
-                            dynamic signInResult = await _authServices
-                                .signInWithEmailAndPassword(
-                                "mohamed@gmail.com", "12345678");
-                            if (signInResult == null) {
-                              debugPrint("sign in error!");
-                              setState(() {
-                                loading = false;
-                              });
-                            };
-                        },
 
-                        child: const Text("Sign In as Mohamed")),
-                    const SizedBox(
-                      height: 20,
-                    ),
 
-                    ElevatedButton(
+                    ButtonWidget(
                         onPressed: () async {
                             setState(() {
                               loading = true;
@@ -155,7 +163,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
 
 
-                    ElevatedButton(
+
+                    ButtonWidget(
                         onPressed: () async {
                             setState(() {
                               loading = true;
@@ -168,19 +177,37 @@ class _SignInScreenState extends State<SignInScreen> {
                               setState(() {
                                 loading = false;
                               });
-                            };
-
+                            }
                         },
 
                         child: const Text("Sign In as Ahmed")),
                     const SizedBox(
                       height: 20,
                     ),
+                    ButtonWidget(
+                        onPressed: () async {
+                          setState(() {
+                            loading = true;
+                          });
+                          dynamic signInResult = await _authServices
+                              .signInWithEmailAndPassword(
+                              "mohamed@gmail.com", "12345678");
+                          if (signInResult == null) {
+                            debugPrint("sign in error!");
+                            setState(() {
+                              loading = false;
+                            });
+                          };
+                        },
 
+                        child: const Text("Sign In as Mohamed")),
+                    const SizedBox(
+                      height: 20,
+                    ),
 
-                    ElevatedButton(
+                    ButtonWidget(
                       child: const Text("Sign in anonymously"),
-                      onPressed: () async {
+                      onPressed:  () async {
                         debugPrint("Sign in anonymously button pressed");
                         setState(() {
                           loading = true;
@@ -198,6 +225,20 @@ class _SignInScreenState extends State<SignInScreen> {
                         }
                       },
                     ),
+
+                const SizedBox(height: 30,),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Don't have an account? ", style: TextStyle(fontSize: 16),),
+                    TextButton(onPressed: (){
+                      widget.toggleShow();
+                    },
+                        child: const Text("Sign Up", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),)),
+                    ]
+                ),
+
                   ],
                 ),
               ),

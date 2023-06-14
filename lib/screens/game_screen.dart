@@ -18,10 +18,6 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   final AuthServices _authServices = AuthServices();
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
 
