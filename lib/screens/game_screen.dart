@@ -7,7 +7,6 @@ import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_
 
 import '../models/car.dart';
 import '../models/message.dart';
-import '../widgets/players_score_list.dart';
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
 
