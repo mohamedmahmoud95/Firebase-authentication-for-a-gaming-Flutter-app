@@ -221,13 +221,9 @@ class _GameScreenState extends State<GameScreen> {
                                                                           .dy)
                                                               .round();
                                                           if (_currentTop >
-                                                              (height -
-                                                                  height / 2.5)) {
+                                                              ((height / 2)-80)) {
                                                             _currentTop =
-                                                                (height -
-                                                                        height /
-                                                                            2.5)
-                                                                    .toInt();
+                                                            ((height / 2)-80).toInt();
                                                           }
                                                         });
 
