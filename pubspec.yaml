@@ -94,12 +94,4 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
-    - assets/car_0.png
-    - assets/car_1.png
-    - assets/car_2.png
-    - assets/car_3.png
-    - assets/car_4.png
-    - assets/threat.png
-    - assets/health.png
-    - assets/verticalDivider.png
-    - assets/road.png
+    - assets/
