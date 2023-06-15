@@ -32,7 +32,7 @@ class _GameScreenState extends State<GameScreen> {
   // form values
   String _currentName = '';
   int _currentTop = 300;
-  int _currentLeft = 40;
+  int _currentLeft = 200;
   int _currentScore = 0;
   int _currentPlayerNo = 0;
   bool _currentConnected = true;
@@ -67,6 +67,9 @@ class _GameScreenState extends State<GameScreen> {
                   UserData? userData = snapshot.data;
 
                   _initialUserName = userData!.name;
+                  _currentLeft = userData.left;
+                  _currentTop = userData.top;
+
 
                   tempUserData = userData;
 
@@ -212,7 +215,21 @@ class _GameScreenState extends State<GameScreen> {
                                                                           .delta
                                                                           .dx))
                                                               .round();
-                                                          if (_currentLeft >
+                                                          if (_currentLeft! >
+                                                          (width - 100)) {
+                                                          _currentLeft =
+                                                          (width - 100)
+                                                              .toInt();
+                                                          }
+                                                          _currentTop = max(
+                                                          0,
+                                                          (_currentTop ??
+                                                          0) +
+                                                          newPosition
+                                                              .delta
+                                                              .dy)
+                                                              .round();
+                                                          if (_currentTop>
                                                               (width - 100)) {
                                                             _currentLeft =
                                                                 (width - 100)
@@ -305,7 +322,7 @@ class _GameScreenState extends State<GameScreen> {
                                             setState(() {
                                               _currentLeft = max(
                                                   0, (_currentLeft ?? 0) + 40);
-                                              if (_currentLeft >
+                                              if (_currentLeft! >
                                                   (width - 100)) {
                                                 _currentLeft =
                                                     (width - 100).toInt();
@@ -557,8 +574,8 @@ class _GameScreenState extends State<GameScreen> {
 
   //Check if a car hit a gift/threat
   bool checkCollision(Gift gift, UserData userData) {
-    int carLeft = _currentLeft;
-    int carTop = _currentTop;
+    int carLeft = _currentLeft!;
+    int carTop = _currentTop!;
     int carSize = 100;
 
     if (gift.left + gift.size >= carLeft && gift.left <= carLeft + carSize) {
