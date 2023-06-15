@@ -15,11 +15,11 @@ class PlayerScoreTile extends StatelessWidget {
           color: Colors.blue[50],
           margin: const EdgeInsets.all(8),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(car.name),
               const SizedBox(height: 5,),
-
               Text("${car.score }"),
             ],
           )
