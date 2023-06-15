@@ -75,8 +75,14 @@ class _GameScreenState extends State<GameScreen> {
                     _currentScore = snapshot.data!.score;
                   }
 
-                  if (thereIsWinner == true) {
+                  if (thereIsWinner == true && score_changed == true) {
                     DatabaseServices().resetScores();
+                    DatabaseServices().deleteAllChats();
+                   // DatabaseServices().updateConnectedStatus(false);
+                    DatabaseServices().disconnectAll();
+                    WinnerDialog();
+                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>WinnerDialog()));
+                    //code to navigate to winner screen
                   }
 
                   if (score_changed == true) {
@@ -681,27 +687,26 @@ class _GameScreenState extends State<GameScreen> {
     return Container();
   }
 
-  Widget WinnerDialog() => Container(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('Yaaay', style: TextStyle(fontSize: 40),),
-              Text('We have a winner!\n congrats $_winnerName', style: const TextStyle(fontSize: 40),),
-             const SizedBox(height: 30,),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  thereIsWinner = false;
-                  DatabaseServices().deleteAllChats();
-                  _authServices.signOut();
-                },
-                child: const Text("Leave game", style: TextStyle(fontSize: 30),),
-              ),
-            ],
-          ),
+  Widget WinnerDialog() => AlertDialog(
+    title: const Text('Yaaay', style: TextStyle(fontSize: 24)),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text('We have a winner!\n congrats $_winnerName',
+            style: const TextStyle(fontSize: 24)),
+        const SizedBox(height: 30),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            thereIsWinner = false;
+            DatabaseServices().deleteAllChats();
+            _authServices.signOut();
+          },
+          child: const Text("Leave game", style: TextStyle(fontSize: 18)),
         ),
+      ],
+    ),
       );
 
   @override
