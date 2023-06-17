@@ -361,6 +361,7 @@ class _GameScreenState extends State<GameScreen> {
                                         onPressed: () {
                                           setState(() {
                                             _currentConnected = false;
+                                            _currentScore = 0;
                                           });
                                           DatabaseServices(uid: user.userID)
                                               .updateUserData(
