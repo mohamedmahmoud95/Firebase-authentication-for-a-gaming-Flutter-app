@@ -33,7 +33,6 @@ class DatabaseServices {
     });
   }
 
-
   Future<void> resetScores() async {
     // Retrieve all cars
     final QuerySnapshot snapshot = await carCollection.get();
@@ -44,6 +43,15 @@ class DatabaseServices {
     }
   }
 
+  Future<void> disconnectAll() async {
+    // Retrieve all cars
+    final QuerySnapshot snapshot = await carCollection.get();
+
+    // Update each car's score to zero
+    for (final DocumentSnapshot doc in snapshot.docs) {
+      await doc.reference.update({'connected': false});
+    }
+  }
 
   // Get user doc stream
   Stream<UserData> get userData {
@@ -89,7 +97,7 @@ class DatabaseServices {
         left: doc.get('left') ?? 200,
         score: doc.get('score') ?? 0,
         connected: doc.get('connected') ?? true,
-        playerNo: index,
+        playerNo: index < 9? index : 0,
       );
     }).toList();
   }

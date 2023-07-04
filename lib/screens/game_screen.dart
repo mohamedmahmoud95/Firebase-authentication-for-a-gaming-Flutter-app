@@ -7,7 +7,6 @@ import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/widgets/loading_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../constants/constants.dart';
 import '../firebase_services/firebase_auth_services.dart';
 import '../models/car.dart';
 import '../models/gift.dart';
@@ -16,6 +15,7 @@ import '../models/road.dart';
 import '../models/user.dart';
 import '../widgets/message_bubble.dart';
 import '../widgets/player_score_tile.dart';
+import 'constants/constants.dart';
 
 class GameScreen extends StatefulWidget {
   @override
@@ -32,7 +32,7 @@ class _GameScreenState extends State<GameScreen> {
   // form values
   String _currentName = '';
   int _currentTop = 300;
-  int _currentLeft = 40;
+  int _currentLeft = 200;
   int _currentScore = 0;
   int _currentPlayerNo = 0;
   bool _currentConnected = true;
@@ -67,7 +67,8 @@ class _GameScreenState extends State<GameScreen> {
                   UserData? userData = snapshot.data;
 
                   _initialUserName = userData!.name;
-
+                  _currentLeft = userData.left;
+                  _currentTop = userData.top;
                   tempUserData = userData;
 
                   if (_currentName == '' && _currentScore == 0) {
@@ -75,8 +76,14 @@ class _GameScreenState extends State<GameScreen> {
                     _currentScore = snapshot.data!.score;
                   }
 
-                  if (thereIsWinner == true) {
+                  if (thereIsWinner == true && score_changed == true) {
                     DatabaseServices().resetScores();
+                    DatabaseServices().deleteAllChats();
+                   // DatabaseServices().updateConnectedStatus(false);
+                    DatabaseServices().disconnectAll();
+                    WinnerDialog();
+                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>WinnerDialog()));
+                    //code to navigate to winner screen
                   }
 
                   if (score_changed == true) {
@@ -206,7 +213,21 @@ class _GameScreenState extends State<GameScreen> {
                                                                           .delta
                                                                           .dx))
                                                               .round();
-                                                          if (_currentLeft >
+                                                          if (_currentLeft! >
+                                                          (width - 100)) {
+                                                          _currentLeft =
+                                                          (width - 100)
+                                                              .toInt();
+                                                          }
+                                                          _currentTop = max(
+                                                          0,
+                                                          (_currentTop ??
+                                                          0) +
+                                                          newPosition
+                                                              .delta
+                                                              .dy)
+                                                              .round();
+                                                          if (_currentTop>
                                                               (width - 100)) {
                                                             _currentLeft =
                                                                 (width - 100)
@@ -299,7 +320,7 @@ class _GameScreenState extends State<GameScreen> {
                                             setState(() {
                                               _currentLeft = max(
                                                   0, (_currentLeft ?? 0) + 40);
-                                              if (_currentLeft >
+                                              if (_currentLeft! >
                                                   (width - 100)) {
                                                 _currentLeft =
                                                     (width - 100).toInt();
@@ -338,6 +359,8 @@ class _GameScreenState extends State<GameScreen> {
                                         onPressed: () {
                                           setState(() {
                                             _currentConnected = false;
+                                            _playerLeftGameBeforeThereIsWinner = true;
+                                          //  _currentScore = 0;
                                           });
                                           DatabaseServices(uid: user.userID)
                                               .updateUserData(
@@ -551,8 +574,8 @@ class _GameScreenState extends State<GameScreen> {
 
   //Check if a car hit a gift/threat
   bool checkCollision(Gift gift, UserData userData) {
-    int carLeft = _currentLeft;
-    int carTop = _currentTop;
+    int carLeft = _currentLeft!;
+    int carTop = _currentTop!;
     int carSize = 100;
 
     if (gift.left + gift.size >= carLeft && gift.left <= carLeft + carSize) {
@@ -585,9 +608,22 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     startGame(tempUserData);
+
   }
+static bool _playerLeftGameBeforeThereIsWinner = false;
+  static bool _gameEnded = false;
 
   void startGame(UserData userData) {
+    if (_playerLeftGameBeforeThereIsWinner && _gameEnded)
+      {
+        setState(() {
+          _currentScore = 0;
+          _playerLeftGameBeforeThereIsWinner = false;
+        });
+      }
+
+
+
     gifts = [];
 
     roads.add(Road( top: -500));
@@ -676,32 +712,32 @@ class _GameScreenState extends State<GameScreen> {
         thereIsWinner = true;
         _currentConnected = false;
         _winnerName = car.name;
+        _gameEnded = true;
       }
     }
     return Container();
   }
 
-  Widget WinnerDialog() => Container(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('Yaaay', style: TextStyle(fontSize: 40),),
-              Text('We have a winner!\n congrats $_winnerName', style: const TextStyle(fontSize: 40),),
-             const SizedBox(height: 30,),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  thereIsWinner = false;
-                  DatabaseServices().deleteAllChats();
-                  _authServices.signOut();
-                },
-                child: const Text("Leave game", style: TextStyle(fontSize: 30),),
-              ),
-            ],
-          ),
+  Widget WinnerDialog() => AlertDialog(
+    title: const Text('Yaaay', style: TextStyle(fontSize: 24)),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text('We have a winner!\n congrats $_winnerName',
+            style: const TextStyle(fontSize: 24)),
+        const SizedBox(height: 30),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            thereIsWinner = false;
+            DatabaseServices().deleteAllChats();
+            _authServices.signOut();
+          },
+          child: const Text("Leave game", style: TextStyle(fontSize: 18)),
         ),
+      ],
+    ),
       );
 
   @override
