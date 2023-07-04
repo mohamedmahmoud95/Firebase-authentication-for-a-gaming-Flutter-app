@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../constants/constants.dart';
 import '../firebase_services/firebase_auth_services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../widgets/button_widget.dart';
 import '../widgets/loading_widget.dart';
+import 'constants/constants.dart';
 
 class SignUpScreen extends StatefulWidget {
   final VoidCallback toggleShow;
@@ -33,6 +34,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.blue[900],
+
             title: const Text("Sign Up"),
             actions: [
               IconButton(
@@ -55,9 +58,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 20,
                   ),
                   TextFormField(
+
                     decoration: textInputDecoration.copyWith(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+
+                          ),// Adjust the value as needed
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),//
+
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(width: 1, color: Colors.blue),
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
                         hintText: "Email",
-                        prefixIcon: const Icon(Icons.email_outlined)),
+                        label: const Text("Email"),
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        focusColor: Colors.blue.shade900,
+
+                    ),
+
                     textInputAction: TextInputAction.next,
                     validator: (value) =>
                     value!.isEmpty ? "Required field is empty!" : null,
@@ -68,11 +89,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 30,
                   ),
                   TextFormField(
                     decoration: textInputDecoration.copyWith(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),//
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),//
+
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(width: 1, color: Colors.blue),
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+
                         hintText: "Password",
+                        label: const Text("Password"),
                         prefixIcon: const Icon(Icons.key)),
                     validator: (value) =>
                     value!.length < 6
@@ -86,9 +120,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 30,
                   ),
+
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20), // Set the border radius
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24), // Set the padding
+                    ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           setState(() {
@@ -102,7 +143,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                         }
                       },
-                      child: const Text("Sign Up")),
+                      child: const Text("Sign Up", style: TextStyle(fontSize: 16),)),
+
+                  const SizedBox(height: 30,),
+
+
+                  ButtonWidget(
+                    child: const Text("Continue with Google"),
+                    onPressed:  () async {
+                      debugPrint("Continue with Google button pressed");
+                      setState(() {
+                        loading = true;
+                      });
+                      // dynamic signIAnonResult =
+                      // await _authServices.signInAnon();
+                      // if (signIAnonResult == null) {
+                      //   debugPrint("sign in error!");
+                      //   setState(() {
+                      //     loading = false;
+                      //   });
+                      // } else {
+                      //   debugPrint("signed in with Google");
+                      //   debugPrint("${signIAnonResult.userID}");
+                      // }
+                    },
+                  ),
+
+                  const SizedBox(height: 30,),
+
+
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Already have an account? ", style: TextStyle(fontSize: 16),),
+                      TextButton(onPressed: (){
+                        widget.toggleShow();
+                      }, child: const Text("Sign In", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),)),
+                    ],
+                  )
                 ],
               ),
             ),

@@ -25,6 +25,7 @@ class AuthServices {
     try {
       UserCredential authResult = await _auth.signInAnonymously();
       final User? firebaseUser = authResult.user;
+      DatabaseServices(uid: firebaseUser?.uid).updateUserData( 'userName', 100, 100, 0, 0, true);
       return _createAppUserFromFirebaseUser(firebaseUser!);
     } catch (e) {
       debugPrint("$e");
@@ -42,7 +43,7 @@ class AuthServices {
       debugPrint("New user added to firebase!");
 
       //Create a Firestore cloud database collection doc with initial data
-      DatabaseServices(uid: firebaseUser?.uid).updateUserData('0', 'userName', 1);
+      DatabaseServices(uid: firebaseUser?.uid).updateUserData( 'userName', 300, 200, 0, 0, true);
       debugPrint("Database collection doc created!");
       return _createAppUserFromFirebaseUser(firebaseUser);
     } catch (e) {
@@ -57,6 +58,8 @@ class AuthServices {
     try {
       UserCredential authResult = await _auth.signInWithEmailAndPassword(email: email, password: password);
       final User? firebaseUser = authResult.user;
+      DatabaseServices(uid: firebaseUser?.uid).updateConnectedStatus(true);
+
       return _createAppUserFromFirebaseUser(firebaseUser!);
     } catch (e) {
       debugPrint("$e");
