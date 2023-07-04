@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../constants/constants.dart';
 import '../firebase_services/firebase_auth_services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../widgets/button_widget.dart';
 import '../widgets/loading_widget.dart';
+import 'constants/constants.dart';
 
 class SignUpScreen extends StatefulWidget {
   final VoidCallback toggleShow;
@@ -145,6 +146,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: const Text("Sign Up", style: TextStyle(fontSize: 16),)),
 
                   const SizedBox(height: 30,),
+
+
+                  ButtonWidget(
+                    child: const Text("Continue with Google"),
+                    onPressed:  () async {
+                      debugPrint("Continue with Google button pressed");
+                      setState(() {
+                        loading = true;
+                      });
+                      // dynamic signIAnonResult =
+                      // await _authServices.signInAnon();
+                      // if (signIAnonResult == null) {
+                      //   debugPrint("sign in error!");
+                      //   setState(() {
+                      //     loading = false;
+                      //   });
+                      // } else {
+                      //   debugPrint("signed in with Google");
+                      //   debugPrint("${signIAnonResult.userID}");
+                      // }
+                    },
+                  ),
+
+                  const SizedBox(height: 30,),
+
 
                    Row(
                      mainAxisAlignment: MainAxisAlignment.center,

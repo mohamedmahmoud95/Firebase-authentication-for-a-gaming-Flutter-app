@@ -7,7 +7,6 @@ import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/widgets/loading_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../constants/constants.dart';
 import '../firebase_services/firebase_auth_services.dart';
 import '../models/car.dart';
 import '../models/gift.dart';
@@ -16,6 +15,7 @@ import '../models/road.dart';
 import '../models/user.dart';
 import '../widgets/message_bubble.dart';
 import '../widgets/player_score_tile.dart';
+import 'constants/constants.dart';
 
 class GameScreen extends StatefulWidget {
   @override
@@ -69,8 +69,6 @@ class _GameScreenState extends State<GameScreen> {
                   _initialUserName = userData!.name;
                   _currentLeft = userData.left;
                   _currentTop = userData.top;
-
-
                   tempUserData = userData;
 
                   if (_currentName == '' && _currentScore == 0) {
@@ -361,7 +359,8 @@ class _GameScreenState extends State<GameScreen> {
                                         onPressed: () {
                                           setState(() {
                                             _currentConnected = false;
-                                            _currentScore = 0;
+                                            _playerLeftGameBeforeThereIsWinner = true;
+                                          //  _currentScore = 0;
                                           });
                                           DatabaseServices(uid: user.userID)
                                               .updateUserData(
@@ -609,9 +608,22 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     startGame(tempUserData);
+
   }
+static bool _playerLeftGameBeforeThereIsWinner = false;
+  static bool _gameEnded = false;
 
   void startGame(UserData userData) {
+    if (_playerLeftGameBeforeThereIsWinner && _gameEnded)
+      {
+        setState(() {
+          _currentScore = 0;
+          _playerLeftGameBeforeThereIsWinner = false;
+        });
+      }
+
+
+
     gifts = [];
 
     roads.add(Road( top: -500));
@@ -700,6 +712,7 @@ class _GameScreenState extends State<GameScreen> {
         thereIsWinner = true;
         _currentConnected = false;
         _winnerName = car.name;
+        _gameEnded = true;
       }
     }
     return Container();

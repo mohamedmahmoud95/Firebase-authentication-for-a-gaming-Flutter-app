@@ -4,7 +4,7 @@ import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/widgets/button_widget.dart';
 import 'package:mutli_user_2d_car_racing_game_with_group_chat_using_flutter_and_firebase_7june/widgets/loading_widget.dart';
 
-import '../constants/constants.dart';
+import 'constants/constants.dart';
 
 class SignInScreen extends StatefulWidget {
   final VoidCallback toggleShow;
@@ -162,7 +162,31 @@ class _SignInScreenState extends State<SignInScreen> {
 
                 const SizedBox(height: 30,),
 
-                Row(
+                    ButtonWidget(
+                      child: const Text("Continue with Google"),
+                      onPressed:  () async {
+                        debugPrint("Continue with Google button pressed");
+                        setState(() {
+                          loading = true;
+                        });
+                        // dynamic signIAnonResult =
+                        // await _authServices.signInAnon();
+                        // if (signIAnonResult == null) {
+                        //   debugPrint("sign in error!");
+                        //   setState(() {
+                        //     loading = false;
+                        //   });
+                        // } else {
+                        //   debugPrint("signed in with Google");
+                        //   debugPrint("${signIAnonResult.userID}");
+                        // }
+                      },
+                    ),
+
+                    const SizedBox(height: 30,),
+
+
+                    Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Don't have an account? ", style: TextStyle(fontSize: 16),),

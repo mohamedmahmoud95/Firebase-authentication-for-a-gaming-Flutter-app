@@ -33,7 +33,6 @@ class DatabaseServices {
     });
   }
 
-
   Future<void> resetScores() async {
     // Retrieve all cars
     final QuerySnapshot snapshot = await carCollection.get();

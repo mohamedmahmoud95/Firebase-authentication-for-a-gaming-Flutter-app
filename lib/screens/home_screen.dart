@@ -16,10 +16,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  final AuthServices _authServices = AuthServices();
-
-
-
   @override
   Widget build(BuildContext context) {
 
